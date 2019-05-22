@@ -1,0 +1,99 @@
+<div class="row">
+    <div class="col-6 text-right">
+        <div class="card">
+            <div class="card-body">
+                <input type="text" #input (keyup)="buscarProductos( input.value )" class="form-control form-control-line" placeholder="Buscar Producto">
+            </div>
+        </div>
+    </div>
+    <div class="col-6 text-right">
+        <div class="card">
+            <div class="card-body">
+                <button type="button " class="btn btn-info btn-rounded" (click)="nuevoProducto()">
+                    Nuevo Producto <i class="fa fa-plus fa-spin"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row animated fadeIn">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="card-title">Total de Productos ( <small>{{ productos.length }}</small> )</h3>
+                    </div>
+                    <div class="col-6 text-right p-r-40">
+                        <input id="incluirInactivos" (click)="cargarProductos()" [(ngModel)]="incluirInactivos" name="incluirInactivos" type="checkbox" class="chk-col-light-green" checked="">
+                        <label for="incluirInactivos">Ver Inactivos</label>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover" data-page-size="10">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Imagen</th>
+                                <th>Codigo</th>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Categoria</th>
+                                <th class="text-center">Estatus</th>
+                                <th class="text-center">Ultima<br>Modificación</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let producto of productos ; index as i" [ngClass]="{'footable-even': (i % 2 == 0), 'footable-odd': (i % 2 != 0)}" class="animated fadeIn">
+                                <td>{{ producto.id }}</td>
+                                <td>
+                                    <img (click)="mostrarModal( producto.id )" [src]=" producto.imagen | imagen:'producto'" class="img-50 img-circle pointer ">
+                                </td>
+                                <td> {{ producto.codigo }} </td>
+                                <td> {{ producto.nombre }} </td>
+                                <td> {{ producto.marca.nombre }}</td>
+                                <td> {{ producto.categoria.nombre }}</td>
+                                <td class="text-center">
+                                    <span class="label" [ngClass]="{'label-success': producto.estatus, 'label-danger': !producto.estatus}">
+                                        <span *ngIf="producto.estatus">Activo</span>
+                                    <span *ngIf="!producto.estatus">Inactivo</span>
+                                    </span>
+                                    <!-- <input [id]="producto.id" [(ngModel)]="producto.estatus" name="estatus" type="checkbox" class="chk-col-light-green" checked="">
+                                    <label [for]="producto.id"></label> -->
+                                </td>
+                                <td class="text-center">
+                                    <span class="mytooltip tooltip-effect-3">
+                                        <span class="">
+                                            <i class="fa fa-info-circle text-info fa-2x"></i>
+                                        </span>
+                                    <span class="tooltip-content p-l-30">
+                                                <span class="tooltip-text p-l-20">
+                                                    Fecha Modificacion: {{ producto.fechamodificacion | date:'dd/MM/yyyy, h:mm a' }} <br>
+                                                    Usuario: {{producto.usuariomodificacion.nombre}}
+                                                </span>
+                                    </span>
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <button (click)="editarProducto( producto.id )" class="btn btn-info">
+                                                <i class="fa fa-edit"></i>
+                                        </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="7 ">
+                                    <div class="text-right ">
+                                        <ul class="pagination "> </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

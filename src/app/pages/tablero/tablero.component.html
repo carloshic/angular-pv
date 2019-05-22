@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="offset-xlg-2 col-4">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title">{{ graficos.tipo_autenticacion.leyenda }} </h4>
+
+                <app-grafico-dona [chartLabels]="graficos.tipo_autenticacion.labels" [chartData]="graficos.tipo_autenticacion.data" chartType="doughnut"></app-grafico-dona>
+            </div>
+        </div>
+    </div>
+    <div class=" col-4">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title">{{ graficos.tipo_usuario.leyenda }} </h4>
+
+                <app-grafico-dona [chartLabels]="graficos.tipo_usuario.labels" [chartData]="graficos.tipo_usuario.data" chartType="pie"></app-grafico-dona>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+<div class="row">
+    <div class="col-6 text-right">
+        <div class="card">
+            <div class="card-body">
+                <input type="text" #input (keyup)="buscarUnidades( input.value )" class="form-control form-control-line" placeholder="Buscar Unidades">
+            </div>
+        </div>
+    </div>
+    <div class="col-6 text-right">
+        <div class="card">
+            <div class="card-body">
+                <button type="button" (click)="nuevaUnidnad()" class="btn btn-info btn-rounded" data-toggle="modal" data-target="#crear-editar">Nueva Unidad <i class="fa fa-plus fa-spin"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="card-title">Unidades registradas ( <small>{{ unidades.length }}</small> )</h3>
+                    </div>
+                    <div class="col-6 text-right p-r-40">
+                        <input id="incluirInactivos" (click)="cargarUnidades()" [(ngModel)]="incluirInactivos" name="incluirInactivos" type="checkbox" class="chk-col-light-green" checked="">
+                        <label for="incluirInactivos">Ver Inactivos</label>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover" data-page-size="10">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Codigo</th>
+                                <th>Descripción</th>
+                                <th>Estatus</th>
+                                <th class="text-center">Ultima<br>Modificación</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of unidades" class="animated fadeIn">
+                                <td>{{ u.id }}</td>
+                                <td>{{ u.codigo }}</td>
+                                <td>{{ u.descripcion }} </td>
+                                <td>
+                                    <label *ngIf="u.estatus" class="label label-success">Activo</label>
+                                    <label *ngIf="!u.estatus" class="label label-danger">Inactivo</label>
+                                </td>
+                                <td class="text-center">
+                                    <span class="mytooltip tooltip-effect-3">
+                                                  <span class="">
+                                                      <i class="fa fa-info-circle text-info fa-2x"></i>
+                                                  </span>
+                                    <span class="tooltip-content p-l-30">
+                                                          <span class="tooltip-text p-l-20">
+                                                              Fecha Modificacion: {{ u.fechamodificacion | date:'dd/MM/yyyy, h:mm a' }} <br>
+                                                              Usuario: {{ u.usuariomodificacion.nombre }}
+                                                          </span>
+                                    </span>
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <button (click)="editarUnidad(u)" data-toggle="modal" data-target="#crear-editar" class="btn btn-info" aria-hidden="true">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <div id="crear-editar" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title" id="myModalLabel">
+                                                    <span *ngIf="esNuevo">Nueva Unidad</span>
+                                                    <span *ngIf="!esNuevo">Editar Unidad</span>
+                                                </h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-horizontal form-material">
+                                                    <div class="form-group">
+                                                        <div class="col-md-12 m-b-20">
+                                                            <input [(ngModel)]="unidad.codigo" name="codigo" type="text" class="form-control" placeholder="Codigo" autocomplete="off"> </div>
+                                                        <div class="col-md-12 m-b-20">
+                                                            <input [(ngModel)]="unidad.descripcion" name="descripcion" type="text" class="form-control" placeholder="Descripción" autocomplete="off"> </div>
+                                                        <div class="col-md-12 m-b-20">
+                                                            <input id="estatus" [(ngModel)]="unidad.estatus" name="estatus" type="checkbox" class="chk-col-light-green" checked="">
+                                                            <label for="estatus">  Estatus</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button (click)="guardar()" type="submit" class="btn btn-info waves-effect" data-dismiss="modal">Guardar</button>
+                                                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- <pre>
+                        {{ unidad | json }}
+                    </pre> -->
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,155 @@
+<div class="card-body">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form-horizontal form-material" autocomplete="off">
+        <div class="form-group row">
+            <div class="col-lg-4 col-xlg-3 col-md-5">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="m-t-30 text-center"> <img (click)="mostrarModal( producto.id )" [src]="producto.imagen | imagen:'producto'" class="img-circle" width="250" />
+                            <h4 class="card-title m-t-10">{{producto.nombre}}</h4>
+                            <h6 class="card-subtitle">{{producto.codigo}}</h6>
+                            <div class="row text-center justify-content-md-center">
+                                <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-people"></i> <div class="font-medium">254</div></a></div>
+                                <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-picture"></i> <div class="font-medium">54</div></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <hr> </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-xlg-9 col-md-7">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="form-group row">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <label class="col-12">Codigo</label>
+                                    <div class="col-12">
+                                        <input [(ngModel)]="producto.codigo" formControlName="codigo" name="codigo" class="form-control form-control-line">
+                                    </div>
+                                    <div *ngIf="form.controls['codigo'].errors?.codigo_existente" class="form-control-feedback text-danger p-l-20"><small>El codigo ya existe</small></div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="nombre" class="col-12">Nombre</label>
+                                    <div class="col-12">
+                                        <input class="form-control form-control-line" [(ngModel)]="producto.nombre" formControlName="nombre" name="nombre" id="nombre">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="descripcion" class="col-12">Descripción</label>
+                                    <div class="col-12">
+                                        <input type="text" class="form-control form-control-line" [(ngModel)]="producto.descripcion" formControlName="descripcion" name="descripcion" id="descripcion">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="costo" class="col-12">Costo</label>
+                                    <div class="col-12">
+                                        <input type="text" class="form-control form-control-line" [(ngModel)]="producto.costo" formControlName="costo" name="costo" id="costo">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="precio" class="col-12">Precio de Venta</label>
+                                    <div class="col-12">
+                                        <input appKeyDownMoneda type="text" class="form-control form-control-line" [(ngModel)]="producto.precio" formControlName="precio" name="precio" id="precio">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+
+                                <div class="form-group">
+                                    <label for="stockMinimo" class="col-12">Stock Minimo</label>
+                                    <div class="col-12">
+                                        <input type="text" class="form-control form-control-line" [(ngModel)]="producto.stockminimo" formControlName="stockMinimo" name="stockMinimo" id="stockMinimo">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-12">Unidad</label>
+                                    <div class="col-sm-12">
+                                        <select [(ngModel)]="producto.unidad.id" formControlName="unidad" name="unidad" class="form-control form-control-line">
+                                                    <option value="-1">Seleccionar</option>
+                                                    <option *ngFor="let unidad of unidades" [ngValue]="unidad.id">{{unidad.codigo}} - {{ unidad.descripcion }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-12">Marca</label>
+                                    <div class="col-sm-12">
+                                        <select [(ngModel)]="producto.marca.id" formControlName="marca" name="marca" class="form-control form-control-line">
+                                                    <option value="-1">Seleccionar</option>
+                                                    <option *ngFor="let marca of marcas" [ngValue]="marca.id">{{marca.nombre}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-12">Categoria</label>
+                                    <div class="col-sm-12">
+                                        <select [(ngModel)]="producto.categoria.id" formControlName="categoria" name="categoria" class="form-control form-control-line">
+                                                    <option value="-1">Seleccionar</option>
+                                                    <option *ngFor="let categoria of categorias" [ngValue]="categoria.id">{{categoria.nombre}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group p-l-20">
+                                    <input id="estatus" [(ngModel)]="producto.estatus" formControlName="estatus" name="estatus" type="checkbox" class="chk-col-light-green" checked="">
+                                    <label for="estatus">  Estatus</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <button class="btn btn-info btn-rounded btn-md" type="submit"><span *ngIf="!esNuevo">Acutalizar</span><span *ngIf="esNuevo">Guardar</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- <div class="form-group">
+            <label for="example-email" class="col-md-12">Email</label>
+            <div class="col-md-12">
+                <input type="email" placeholder="johnathan@admin.com" class="form-control form-control-line" name="example-email" id="example-email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-12">Password</label>
+            <div class="col-md-12">
+                <input type="password" value="password" class="form-control form-control-line">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-12">Phone No</label>
+            <div class="col-md-12">
+                <input type="text" placeholder="123 456 7890" class="form-control form-control-line">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-12">Message</label>
+            <div class="col-md-12">
+                <textarea rows="5" class="form-control form-control-line"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-12">Select Country</label>
+            <div class="col-sm-12">
+                <select class="form-control form-control-line">
+                  <option>London</option>
+                  <option>India</option>
+                  <option>Usa</option>
+                  <option>Canada</option>
+                  <option>Thailand</option>
+              </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <button class="btn btn-success">Update Profile</button>
+            </div>
+        </div> -->
+    </form>
+</div>
