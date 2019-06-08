@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import swal from 'sweetalert2';
 
 @Injectable()
 export class ModalUploadService {
@@ -7,7 +8,7 @@ export class ModalUploadService {
   public tipo: string;
   public id: number;
 
-  public oculto: string = 'oculto';
+  public oculto = 'oculto';
 
   public notificacion = new EventEmitter<any>();
 
@@ -20,9 +21,20 @@ export class ModalUploadService {
   }
 
   mostrarModal( tipo: string, id: number ) {
-    this.oculto = '';
-    this.id = id;
-    this.tipo = tipo;
+    if ( tipo && id) {
+      this.oculto = '';
+      this.id = id;
+      this.tipo = tipo;
+    } else {
+      swal.fire({
+        type: 'warning',
+        title: 'Parametros no validos',
+        text: 'Los parametros recibidos son invalido',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    
   }
 
 }

@@ -10,15 +10,15 @@ import { SharedService } from '../../services/service.index';
   styles: []
 })
 export class BreadcrumbsComponent implements OnInit {
-
-  paginaActual: string = '';
-  carpeta: string = '';
+  fechaActual = new Date();
+  paginaActual = '';
+  carpeta = '';
 
   constructor(
     private router: Router,
     public title: Title,
     public meta: Meta,
-    public _sharedService: SharedService
+    public sharedService: SharedService,
    ) {
 
     this.getDataRoute()
@@ -28,7 +28,7 @@ export class BreadcrumbsComponent implements OnInit {
         this.carpeta = data.carpeta;
         this.title.setTitle( this.paginaActual );
 
-        let metaTag: MetaDefinition = {
+        const metaTag: MetaDefinition = {
           name: 'description',
           content: this.paginaActual
         };

@@ -1,15 +1,13 @@
 import { Usuario } from './usuario.model';
 
-export class Unidad {
+export class Caja {
     public id: number;
-    public codigo: string;
-    public descripcion: string;
-    public estatus: boolean;
     public fechamodificacion: Date;
     public usuariomodificacion: Usuario;
 
     constructor() {
-        this.estatus = true;
+        this.id = -1;
+        this.fechamodificacion = new Date();
         this.usuariomodificacion = new Usuario();
-     }
+    }
 }

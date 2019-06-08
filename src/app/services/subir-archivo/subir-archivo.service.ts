@@ -16,8 +16,8 @@ export class SubirArchivoService {
 
     return new Promise( (resolve, reject ) => {
 
-      let formData = new FormData();
-      let xhr = new XMLHttpRequest();
+      const formData = new FormData();
+      const xhr = new XMLHttpRequest();
 
       formData.append( 'file', file, file.name );
 
@@ -35,7 +35,7 @@ export class SubirArchivoService {
         }
       };
 
-      let url = URL_SERVICIOS + '/upload/' + type + '/' + id;
+      const url = URL_SERVICIOS + '/upload/' + type + '/' + id;
 
       xhr.open('PUT', url, true );
       xhr.send( formData );
@@ -46,9 +46,9 @@ export class SubirArchivoService {
   subirArchivo2(file: File, type: string, id: number) {
 
     return new Promise( (resolve, reject ) => {
-    let url = URL_SERVICIOS + '/upload/' + type + '/' + id;
+    const url = URL_SERVICIOS + '/upload/' + type + '/' + id;
 
-    let formData = new FormData();
+    const formData = new FormData();
 
     formData.append( 'file', file, file.name );
 
@@ -72,7 +72,7 @@ export class SubirArchivoService {
       }
     }).catch((error) => {
         console.log(error);
-        return Observable.throw( error );
+        return Observable.throwError( error );
     });
     });
   }

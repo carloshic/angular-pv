@@ -24,11 +24,13 @@ export class UnidadService implements IServiceBase {
     const url = URL_SERVICIOS + `/unidad?inactivos=${incluirInactivos}`;
     return this.http.get(url, httpOptions ).map((response: IResponse): Unidad[] => {
 
+      let unidades: Unidad[] = [];
       this.sharedService.token = response.token;
 
       switch ( response.status ) {
         case Status.OK:
-        return response.data;
+        unidades = response.data;
+        break;
         case Status.ERROR:
           swal.fire(response.message, response.error.message, 'error');
           break;
@@ -38,9 +40,9 @@ export class UnidadService implements IServiceBase {
           });
           break;
         case Status.NOT_RECORDS_FOUND:
-
         break;
       }
+      return unidades;
     }).catch(err => {
       swal.fire( 'Ops!!', err.message, 'error' );
       return Observable.throwError( err );
@@ -52,12 +54,13 @@ export class UnidadService implements IServiceBase {
 
     return this.http.get( url, httpOptions )
                 .map( (response: IResponse) => {
-
+                  let unidad: Unidad;
                   this.sharedService.token = response.token;
 
                   switch ( response.status ) {
                     case Status.OK:
-                    return response.data;
+                      unidad = response.data as Unidad;
+                      break;
                     case Status.ERROR:
                       swal.fire(response.message, response.error.message, 'error');
                       break;
@@ -70,6 +73,7 @@ export class UnidadService implements IServiceBase {
                       swal.fire('Ops!!', response.error.message, 'info');
                       break;
                   }
+                  return unidad;
                 }).catch( (response) => {
                    swal.fire('Ops!!', response.error.message, 'error');
                    return Observable.throwError( response );
@@ -156,7 +160,27 @@ export class UnidadService implements IServiceBase {
     const url = URL_SERVICIOS + `/busqueda/unidad/${termino}/?inactivos=${incluirInactivos}`;
     return this.http.get( url, httpOptions )
                 .map( (response: IResponse) => {
-                  return response.data;
+
+                  let unidades: Unidad[] = [];
+
+                  this.sharedService.token = response.token;
+
+                  switch ( response.status ) {
+                    case Status.OK:
+                    unidades = response.data as Unidad[];
+                    break;
+                    case Status.ERROR:
+                      swal.fire(response.message, response.error.message, 'error');
+                      break;
+                    case Status.SESSION_EXPIRED:
+                      swal.fire('La sesión  ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
+                        this.router.navigate(['/login']);
+                      });
+                      break;
+                    case Status.NOT_RECORDS_FOUND:
+                    break;
+                  }
+                  return unidades;
                 } )
                 .catch( response => {
                   swal.fire('Ops!!', response.error.message, 'error');

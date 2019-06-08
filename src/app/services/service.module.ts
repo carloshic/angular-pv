@@ -6,6 +6,8 @@ import { ProductoService } from './producto/producto.service';
 import { EmpresaService } from './empresa/empresa.service';
 import { MarcaService } from './marca/marca.service';
 import { CategoriaService } from './categoria/categoria.service';
+import { ConfiguracionService } from './configuracion/configuracion.service';
+import { TipoOperacionService } from './tipo-operacion/tipo-operacion.service';
 
 import {
   SettingsService,
@@ -16,7 +18,7 @@ import {
   AdminGuard,
   SubirArchivoService,
   VerificaTokenGuard,
-  UnidadService
+  UnidadService,
  } from './service.index';
 
 
@@ -39,7 +41,9 @@ import {
     EmpresaService,
     UnidadService,
     MarcaService,
-    CategoriaService
+    CategoriaService,
+    ConfiguracionService,
+    TipoOperacionService
   ],
   declarations: []
 })

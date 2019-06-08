@@ -5,8 +5,11 @@ import { Empresa } from '../../models/empresa.model';
 
 @Injectable()
 export class SharedService {
+// tslint:disable-next-line: variable-name
   private _usuarioActivo: Usuario;
+// tslint:disable-next-line: variable-name
   private _empresaActiva: Empresa;
+// tslint:disable-next-line: variable-name
   private _token: IToken;
 
   constructor() { }

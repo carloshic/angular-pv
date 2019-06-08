@@ -6,6 +6,10 @@
     cursor: pointer;
 }
 
+.subir-imagen:hover {
+    cursor: pointer;
+}
+
 .w150 {
     width: 150px;
 }
@@ -60,4 +64,14 @@
 
 .fadeIn {
     animation-name: fadeIn;
+}
+
+.label-shadow {
+    box-shadow: 0px 1px 7px #c5c5c5;
+}
+
+.card {
+    box-shadow: 0px 1px 6px #bfbfbf !important;
+    border-radius: 11px !important;
+    margin-top: 10px;
 }

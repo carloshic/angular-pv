@@ -16,8 +16,8 @@ export class ModalUploadComponent implements OnInit {
   imagenTemp: string;
 
   constructor(
-    public _subirArchivoService: SubirArchivoService,
-    public _modalUploadService: ModalUploadService
+    public subirArchivoService: SubirArchivoService,
+    public modalUploadService: ModalUploadService
   ) { }
 
   ngOnInit() {
@@ -27,7 +27,7 @@ export class ModalUploadComponent implements OnInit {
     this.imagenTemp = null;
     this.imagenSubir = null;
 
-    this._modalUploadService.ocultarModal();
+    this.modalUploadService.ocultarModal();
   }
 
   seleccionImage( archivo: File ) {
@@ -45,8 +45,8 @@ export class ModalUploadComponent implements OnInit {
 
     this.imagenSubir = archivo;
 
-    let reader = new FileReader();
-    let urlImagenTemp = reader.readAsDataURL( archivo );
+    const reader = new FileReader();
+    reader.readAsDataURL( archivo );
 
     reader.onloadend = () => this.imagenTemp = reader.result.toString();
 
@@ -54,10 +54,10 @@ export class ModalUploadComponent implements OnInit {
 
   subirImagen() {
 
-    this._subirArchivoService.subirArchivo( this.imagenSubir, this._modalUploadService.tipo, this._modalUploadService.id )
+    this.subirArchivoService.subirArchivo( this.imagenSubir, this.modalUploadService.tipo, this.modalUploadService.id )
           .then( (response: IResponse) => {
 
-            this._modalUploadService.notificacion.emit( response );
+            this.modalUploadService.notificacion.emit( response );
             swal.fire({
               type: 'success',
               title: 'Imagen Actualizada',

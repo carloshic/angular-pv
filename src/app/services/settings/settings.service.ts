@@ -9,6 +9,7 @@ export class SettingsService {
     tema: 'default'
   };
 
+// tslint:disable-next-line: variable-name
   constructor( @Inject(DOCUMENT) private _document ) {
     this.cargarAjustes();
   }
@@ -26,7 +27,7 @@ export class SettingsService {
 
       this.aplicarTema( this.ajustes.tema );
 
-    }else {
+    } else {
       // console.log( 'Usando valores por defecto' );
       this.aplicarTema( this.ajustes.tema );
     }
@@ -36,7 +37,7 @@ export class SettingsService {
   aplicarTema( tema: string ) {
 
 
-    let url = `assets/css/colors/${ tema }.css`;
+    const url = `assets/css/colors/${ tema }.css`;
     this._document.getElementById('tema').setAttribute('href', url );
 
     this.ajustes.tema = tema;

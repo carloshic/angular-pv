@@ -8,6 +8,10 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+// slim scroll
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
 // ng2-charts
 import { ChartsModule } from 'ng2-charts';
@@ -28,11 +32,18 @@ import { ProductosComponent } from './producto/productos.component';
 import { MarcasComponent } from './marcas/marcas.component';
 import { CategoriasComponent } from './categorias/categorias.component';
 import { UnidadesComponent } from './unidad/unidades.component';
+import { ConfiguracionesComponent } from './configuraciones/configuraciones.component';
+import { KeyDownMonedaDirective } from '../directives/key-down-moneda.directive';
+import { EntradaMonedaDirective } from '../directives/entrada-moneda.directive';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { VentaComponent } from './venta/venta.component';
 
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+    suppressScrollX: true
+};
 
 @NgModule({
     declarations: [
-
         TableroComponent,
         IncrementadorComponent,
         GraficoDonaComponent,
@@ -44,12 +55,17 @@ import { UnidadesComponent } from './unidad/unidades.component';
         ProductosComponent,
         MarcasComponent,
         CategoriasComponent,
-        UnidadesComponent
+        UnidadesComponent,
+        ConfiguracionesComponent,
+        EntradaMonedaDirective,
+        KeyDownMonedaDirective,
+        VentaComponent
     ],
     exports: [
         TableroComponent,
     ],
     imports: [
+        PerfectScrollbarModule,
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
@@ -57,7 +73,14 @@ import { UnidadesComponent } from './unidad/unidades.component';
         PAGES_ROUTES,
         FormsModule,
         ChartsModule,
-        PipesModule
+        PipesModule,
+        CurrencyMaskModule
+    ],
+    providers: [
+        {
+            provide: PERFECT_SCROLLBAR_CONFIG,
+            useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+        }
     ]
 })
 export class PagesModule { }

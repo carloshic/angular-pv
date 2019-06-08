@@ -17,106 +17,113 @@ export class CategoriaService implements IServiceBase {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private _sharedService: SharedService
+    private sharedService: SharedService
   ) { }
   consultarTodo(incluirInactivos: boolean = false) {
-    const httpOptions = { headers: new HttpHeaders({ Authorization: this._sharedService.token.accessToken })};
-    let url = URL_SERVICIOS + `/categoria?inactivos=${incluirInactivos}`;
+    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
+    const url = URL_SERVICIOS + `/categoria?inactivos=${incluirInactivos}`;
     return this.http.get(url, httpOptions ).map((response: IResponse): Categori[] => {
-
+      let retorno: Categori[] = [];
       switch ( response.status ) {
         case Status.OK:
-        return response.data;
+          retorno = response.data;
+          break;
         case Status.ERROR:
-          swal.fire(response.message, response.error.message, 'error');
+        swal.fire(response.message, response.error.message, 'error');
         break;
         case Status.SESSION_EXPIRED:
-          swal.fire('La sesión  ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
-            this.router.navigate(['/login']);
-          });
+        swal.fire('La sesión  ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
+          this.router.navigate(['/login']);
+        });
         break;
         case Status.NOT_RECORDS_FOUND:
-
-        break;
+          swal.fire('Ops!!', 'No hay categorias registradas', 'info');
+          break;
       }
+      return retorno;
     }).catch(err => {
       swal.fire( 'Ops!!', err.message, 'error' );
-      return Observable.throw( err );
+      return Observable.throwError( err );
     });
   }
   consultarPorId(id: number) {
-    const httpOptions = { headers: new HttpHeaders({ Authorization: this._sharedService.token.accessToken })};
+    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
     const url = URL_SERVICIOS + '/categoria/' + id;
 
     return this.http.get( url, httpOptions )
                 .map( (response: IResponse) => {
 
-                  this._sharedService.token = response.token;
+                  let retorno: Categori;
+
+                  this.sharedService.token = response.token;
 
                   switch ( response.status ) {
                     case Status.OK:
-                    return response.data;
+                      retorno = response.data as Categori;
+                      break;
                     case Status.ERROR:
-                      swal.fire(response.message, response.error.message, 'error');
+                    swal.fire(response.message, response.error.message, 'error');
                     break;
                     case Status.SESSION_EXPIRED:
-                      swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
-                        this.router.navigate(['/login']);
-                      });
+                    swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
+                      this.router.navigate(['/login']);
+                    });
                     break;
                     case Status.NOT_RECORDS_FOUND:
-                        swal.fire('Ops!!', response.error.message, 'info');
+                    swal.fire('Ops!!', response.error.message, 'info');
                     break;
                   }
+
+                  return retorno;
                 }).catch( (response) => {
                    swal.fire('Ops!!', response.error.message, 'error');
-                   return Observable.throw( response );
+                   return Observable.throwError( response );
                 });
   }
   registrar(categoria: Categori) {
-    const httpOptions = { headers: new HttpHeaders({ Authorization: this._sharedService.token.accessToken })};
-    let url = URL_SERVICIOS + '/categoria/';
+    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
+    const url = URL_SERVICIOS + '/categoria/';
 
     return this.http.post(url, categoria, httpOptions)
     .map((response: IResponse) => {
 
-      this._sharedService.token = response.token;
+      this.sharedService.token = response.token;
 
       switch ( response.status ) {
         case Status.OK:
-            swal.fire({
-              type: 'success',
-              title: 'Exito',
-              text: `Categoria: ${categoria.nombre} creada con exito`,
-              showConfirmButton: false,
-              timer: 1500
-            });
+          swal.fire({
+            type: 'success',
+            title: 'Exito',
+            text: `Categoria: ${categoria.nombre} creada con exito`,
+            showConfirmButton: false,
+            timer: 1500
+          });
           break;
         case Status.ERROR:
           swal.fire(response.message, response.error.message, 'error');
-        break;
+          break;
         case Status.SESSION_EXPIRED:
           swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
             this.router.navigate(['/login']);
           });
-        break;
+          break;
         case Status.NOT_RECORDS_FOUND:
         break;
       }
     })
     .catch((response) => {
       swal.fire('Ops!!', response.error.message, 'error');
-                   return Observable.throw( response );
+      return Observable.throwError( response );
     });
   }
   actualizar(id: number, categori: Categori) {
-    const httpOptions = { headers: new HttpHeaders({ Authorization: this._sharedService.token.accessToken })};
-    let url = URL_SERVICIOS + '/categoria/' + id;
+    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
+    const url = URL_SERVICIOS + '/categoria/' + id;
 
     return this.http.put(url, categori, httpOptions)
     .map((response: IResponse) => {
 
-      this._sharedService.token = response.token;
+      this.sharedService.token = response.token;
 
       switch ( response.status ) {
         case Status.OK:
@@ -127,22 +134,22 @@ export class CategoriaService implements IServiceBase {
               showConfirmButton: false,
               timer: 1500
             });
-        break;
+            break;
         case Status.ERROR:
           swal.fire(response.message, response.error.message, 'error');
-        break;
+          break;
         case Status.SESSION_EXPIRED:
           swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
             this.router.navigate(['/login']);
           });
-        break;
+          break;
         case Status.NOT_RECORDS_FOUND:
         break;
       }
     })
     .catch((response) => {
       swal.fire('Ops!!', response.error.message, 'error');
-                   return Observable.throw( response );
+      return Observable.throwError( response );
     });
   }
   borrar(id: number) {
@@ -150,15 +157,15 @@ export class CategoriaService implements IServiceBase {
   }
 
   buscar(termino: string, incluirInactivos: boolean) {
-    const httpOptions = { headers: new HttpHeaders({ Authorization: this._sharedService.token.accessToken })};
-    let url = URL_SERVICIOS + `/busqueda/categoria/${termino}/?inactivos=${incluirInactivos}`;
+    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
+    const url = URL_SERVICIOS + `/busqueda/categoria/${termino}/?inactivos=${incluirInactivos}`;
     return this.http.get( url, httpOptions )
                 .map( (response: IResponse) => {
                   return response.data;
                 } )
                 .catch( response => {
                   swal.fire('Ops!!', response.error.message, 'error');
-                  return Observable.throw( response );
+                  return Observable.throwError( response );
                 });
   }
 }

@@ -1,15 +1,15 @@
 import { Usuario } from './usuario.model';
+import { Empresa } from './empresa.model';
 
-export class Unidad {
+export class Configuracion {
     public id: number;
+    public empresa: Empresa;
     public codigo: string;
-    public descripcion: string;
-    public estatus: boolean;
+    public valor: string;
     public fechamodificacion: Date;
     public usuariomodificacion: Usuario;
 
     constructor() {
-        this.estatus = true;
-        this.usuariomodificacion = new Usuario();
-     }
+        this.empresa = new Empresa();
+    }
 }

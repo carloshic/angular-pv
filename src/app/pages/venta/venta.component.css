@@ -1,0 +1,40 @@
+.footer-venta {
+    /* bottom: 0;
+    left: 0px;
+    padding: 17px 15px;
+    position: absolute;
+    right: 0;
+    border-top: 1px solid rgba(120, 130, 140, 0.13); */
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 17px 15px;
+    width: 100%;
+    color: white;
+    text-align: center;
+}
+
+.sticky {
+    position: relative;
+    top: 0;
+    overflow: hidden;
+    z-index: 10;
+}
+
+@keyframes highlight {
+    0% {
+        background: #ffff99;
+        /* lovely yellow colour */
+    }
+    100% {
+        background: none;
+    }
+}
+
+.highlight {
+    animation: highlight 2s;
+}
+
+.stats {
+    width: 80% !important;
+}

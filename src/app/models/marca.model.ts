@@ -11,7 +11,6 @@ export class Marca {
     public fechamodificacion: Date;
     public usuariomodificacion: Usuario;
     constructor( ) {
-        this.id = -1;
         this.empresa = new Empresa();
         this.estatus = true;
         this.usuarioestatus = new Usuario();

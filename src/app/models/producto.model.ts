@@ -22,6 +22,14 @@ export class Producto {
     public fechamodificacion: Date;
     public usuariomodificacion: Usuario;
     constructor( ) {
+        this.codigo = '';
+        this.nombre = '';
+        this.descripcion = '';
+        this.costo = 0;
+        this.precio = 0;
+        this.stockminimo = 0;
+        this.imagen = '';
+        this.estatus = true;
         this.unidad = new Unidad();
         this.marca = new Marca();
         this.categoria = new Categori();

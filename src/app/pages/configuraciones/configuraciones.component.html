@@ -2,14 +2,14 @@
     <div class="col-6 text-right">
         <div class="card">
             <div class="card-body">
-                <input type="text" #input (keyup)="buscarMarcas( input.value )" class="form-control form-control-line" placeholder="Buscar Marcas">
+                <input type="text" #input (keyup)="buscarConfiguraciones( input.value )" class="form-control form-control-line" placeholder="Buscar configuracions">
             </div>
         </div>
     </div>
     <div class="col-6 text-right">
         <div class="card">
             <div class="card-body">
-                <button type="button" (click)="nuevaMarca()" class="btn btn-info btn-rounded" data-toggle="modal" data-target="#crear-editar-marca">Nueva Marca <i class="fa fa-plus fa-spin"></i></button>
+                <button type="button" (click)="nuevaConfiguracion()" class="btn btn-info btn-rounded" data-toggle="modal" data-target="#crear-editar">Nueva configuracion <i class="fa fa-plus fa-spin"></i></button>
             </div>
         </div>
     </div>
@@ -19,12 +19,8 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-6">
-                        <h3 class="card-title">Marcas registradas ( <small>{{ marcas.length }}</small> )</h3>
-                    </div>
-                    <div class="col-6 text-right p-r-40">
-                        <input id="incluirInactivos" (click)="cargarMarcas()" [(ngModel)]="incluirInactivos" name="incluirInactivos" type="checkbox" class="chk-col-light-green" checked="">
-                        <label for="incluirInactivos">Ver Inactivos</label>
+                    <div class="col-12">
+                        <h3 class="card-title">configuraciones registradas ( <small>{{ configuraciones.length }}</small> )</h3>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -32,24 +28,17 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Estatus</th>
+                                <th>Codigo</th>
+                                <th>Valor</th>
                                 <th class="text-center">Ultima<br>Modificación</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let m of marcas" class="animated fadeIn">
-                                <td>{{ m.id }}</td>
-                                <td>{{ m.nombre }}</td>
-                                <td>{{ m.descripcion }} </td>
-                                <td>
-                                    <span class="label label-shadow" [ngClass]="{'label-light-success': m.estatus, 'label-light-danger': !m.estatus}">
-                                                <span *ngIf="m.estatus">Activo</span>
-                                    <span *ngIf="!m.estatus">Inactivo</span>
-                                    </span>
-                                </td>
+                            <tr *ngFor="let conf of configuraciones" class="animated fadeIn">
+                                <td>{{ conf.id }}</td>
+                                <td>{{ conf.codigo }}</td>
+                                <td>{{ conf.valor }} </td>
                                 <td class="text-center">
                                     <span class="mytooltip tooltip-effect-3">
                                                     <span class="">
@@ -57,41 +46,38 @@
                                                     </span>
                                     <span class="tooltip-content p-l-30">
                                                             <span class="tooltip-text p-l-20">
-                                                                Fecha Modificacion: {{ m.fechamodificacion | date:'dd/MM/yyyy, h:mm a' }} <br>
-                                                                Usuario: {{ m.usuariomodificacion.nombre }}
+                                                                Fecha Modificacion: {{ conf.fechamodificacion | date:'dd/MM/yyyy, h:mm a' }} <br>
+                                                                Usuario: {{ conf.usuariomodificacion.nombre }}
                                                             </span>
                                     </span>
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <button (click)="editarMarca(m)" data-toggle="modal" data-target="#crear-editar-marca" class="btn btn-info" aria-hidden="true">
-                                                            <i class="fa fa-edit"></i>
-                                            </button>
+                                    <button (click)="editarConfiguracion(conf)" data-toggle="modal" data-target="#crear-editar" class="btn btn-info" aria-hidden="true">
+                                      <i class="fa fa-edit"></i>
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <div id="crear-editar-marca" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div id="crear-editar" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                                 <h4 class="modal-title" id="myModalLabel">
-                                                    <span *ngIf="esNuevo">Nueva Marca</span>
-                                                    <span *ngIf="!esNuevo">Editar Marca</span>
+                                                    <span *ngIf="esNuevo">Nueva Configuración</span>
+                                                    <span *ngIf="!esNuevo">Editar Configuración</span>
                                                 </h4>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="form-horizontal form-material">
                                                     <div class="form-group">
                                                         <div class="col-md-12 m-b-20">
-                                                            <input [(ngModel)]="marca.nombre" name="nombre" type="text" class="form-control" placeholder="Nombre" autocomplete="off"> </div>
+                                                            <input [(ngModel)]="configuracion.codigo" [disabled]="!esNuevo" name="nombre" type="text" class="form-control" placeholder="Nombre" autocomplete="off"> </div>
                                                         <div class="col-md-12 m-b-20">
-                                                            <input [(ngModel)]="marca.descripcion" name="descripcion" type="text" class="form-control" placeholder="Descripción" autocomplete="off"> </div>
-                                                        <div class="col-md-12 m-b-20">
-                                                            <input id="estatus" [(ngModel)]="marca.estatus" name="estatus" type="checkbox" class="chk-col-light-green" checked="">
-                                                            <label for="estatus">  Estatus</label>
+                                                            <input [(ngModel)]="configuracion.valor" name="valor" type="text" class="form-control" placeholder="Valor" autocomplete="off">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -109,11 +95,9 @@
                         </tfoot>
                     </table>
                     <!-- <pre>
-                        {{ marca | json }}
+                        {{ configuracion | json }}
                     </pre> -->
                 </div>
-
-
             </div>
         </div>
     </div>

@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover" data-page-size="10">
+                    <table class="table table-hover stylish-table" data-page-size="10">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -45,8 +45,10 @@
                                 <td>{{ u.codigo }}</td>
                                 <td>{{ u.descripcion }} </td>
                                 <td>
-                                    <label *ngIf="u.estatus" class="label label-success">Activo</label>
-                                    <label *ngIf="!u.estatus" class="label label-danger">Inactivo</label>
+                                    <span class="label label-shadow" [ngClass]="{'label-light-success': u.estatus, 'label-light-danger': !u.estatus}">
+                                                <span *ngIf="u.estatus">Activo</span>
+                                    <span *ngIf="!u.estatus">Inactivo</span>
+                                    </span>
                                 </td>
                                 <td class="text-center">
                                     <span class="mytooltip tooltip-effect-3">

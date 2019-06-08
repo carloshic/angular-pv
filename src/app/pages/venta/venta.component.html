@@ -1,0 +1,114 @@
+<div class="from-group row">
+    <div class="col-md-8 col-xs-12">
+        <div class="card m-t-5">
+            <div class="card-title">
+                <h3></h3>
+            </div>
+            <div class="card-header">
+                <input type="text" (keypress)="keypress($event)" class="form-control" placeholder="Codigo de Producto">
+            </div>
+            <div class="card-body">
+                <perfect-scrollbar style="max-height: 700px;">
+                    <div class="table-responsive">
+                        <table class="table table-hover stylish-table" data-page-size="10">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th class="text-right">Precio</th>
+                                    <th class="text-right w-50">Total</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let detalleOperacion of operacion.detalleOperacion ; index as i" [ngClass]="{'footable-even': (i % 2 == 0), 'footable-odd': (i % 2 != 0)}" class="highlight-item">
+                                    <td>
+                                        <h6>{{ detalleOperacion.producto.nombre }}</h6><small class="text-muted">{{ detalleOperacion.producto.codigo }}</small>
+                                    </td>
+                                    <td> {{ detalleOperacion.cantidad }} </td>
+                                    <td class="text-right"> {{ detalleOperacion.producto.precio | currency }}</td>
+                                    <td class="text-right"> {{ detalleOperacion.total | currency }}</td>
+                                    <td class="text-center">
+                                        <button (click)="decrementarCantidad(detalleOperacion)" type="button" class="btn btn-sm btn-circle btn-secondary"><i class="fa fa-minus"></i> </button>
+                                        <button (click)="incrementarCantidad(detalleOperacion)" type="button" class="btn btn-sm btn-circle btn-default"><i class="fa fa-plus"></i> </button>
+                                        <!-- <button *ngIf="detalleOperacion.cantidad === 1" class="btn btn-circle btn-secondary" (click)="borrar(detalleOperacion.producto)">
+                                            <i class="fa fa-remove"></i>
+                                        </button> -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="7 ">
+                                        <div class="text-right ">
+                                            <ul class="pagination "> </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </perfect-scrollbar>
+                <div class="card-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xs-12 sticky">
+        <div class="form-group row">
+            <div class="col-12 text-center">
+                <div class="card m-t-5">
+                    <div class="card-body">
+
+                        <div class="row m-l-10">
+                            <div class="stats">
+                                <h1 class="text-left text-themecolor">Total: {{ operacion.total | currency }}</h1>
+                                <!-- <h6 class="text-left text-themecolor">sub</h6> -->
+                                <button class="btn btn-rounded btn-outline btn-secondary btn-block btn-lg m-t-10 font-14">Pagar</button>
+                            </div>
+                            <div class="stats-icon text-right ml-auto"><i class="fa fa-dollar display-5 op-3 text-themecolor"></i></div>
+                        </div>
+                        <!-- <div class="d-flex">
+                            <div class="stats">
+                                <h1 class="text-red">Total: {{ operacion.total | currency }}</h1>
+                                <h6 class="text-red"></h6>
+                                <button class="btn btn-rounded btn-outline btn-secondary btn-block btn-lg m-t-10 font-14">Pagar</button>
+                            </div>
+                            <div class="stats-icon text-right ml-auto"><i class="fa fa-dollar display-5 op-3 text-dark"></i></div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="footer-venta label-themecolor">
+    <div class="row">
+        <div class="col-2">
+            <button class="btn waves-effect waves-light btn-lg btn-secondary">Accion 1</button>
+        </div>
+        <div class="col-2">
+            <button class="btn waves-effect waves-light btn-lg btn-rounded btn-secondary">Accion 2</button>
+        </div>
+        <div class="col-2">
+            <button class="btn waves-effect waves-light btn-lg btn-rounded btn-secondary">Accion 3</button>
+        </div>
+        <div class="col-2">
+            <button class="btn waves-effect waves-light btn-lg btn-rounded btn-secondary">Accion 4</button>
+        </div>
+        <div class="col-2">
+            <button class="btn waves-effect waves-light btn-lg btn-rounded btn-secondary">Accion 4</button>
+        </div>
+        <div class="col-2">
+            <button class="btn waves-effect waves-light btn-lg btn-rounded btn-secondary">Accion 4</button>
+        </div>
+
+    </div>
+
+
+
+
+</footer>

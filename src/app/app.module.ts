@@ -15,7 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './login/register.component';
 import { PagesComponent } from './pages/pages.component';
 import { SharedModule } from './shared/shared.module';
-import { KeyDownMonedaDirective } from './directives/key-down-moneda.directive';
+import { VentaComponent } from './pages/venta/venta.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,7 @@ import { KeyDownMonedaDirective } from './directives/key-down-moneda.directive';
     LoginComponent,
     RegisterComponent,
     PagesComponent,
-    KeyDownMonedaDirective
+    //VentaComponent,
   ],
   imports: [
     BrowserModule,

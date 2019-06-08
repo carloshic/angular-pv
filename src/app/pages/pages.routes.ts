@@ -1,6 +1,4 @@
 import { RouterModule, Routes } from '@angular/router';
-
-import { PagesComponent } from './pages.component';
 import { TableroComponent } from './tablero/tablero.component';
 import { AccoutSettingsComponent } from './accout-settings/accout-settings.component';
 import { PerfilUsuarioComponent } from './perfil-usuario/perfil-usuario.component';
@@ -17,6 +15,8 @@ import { ProductoComponent } from './producto/producto.component';
 import { MarcasComponent } from './marcas/marcas.component';
 import { CategoriasComponent } from './categorias/categorias.component';
 import { UnidadesComponent } from './unidad/unidades.component';
+import { ConfiguracionesComponent } from './configuraciones/configuraciones.component';
+import { VentaComponent } from './venta/venta.component';
 
 
 
@@ -82,6 +82,18 @@ const pagesRoutes: Routes = [
         component: UnidadesComponent,
         canActivate: [ AdminGuard ],
         data: { titulo: 'Listado de Unidades' }
+    },
+    {
+        path: 'configuraciones',
+        component: ConfiguracionesComponent,
+        canActivate: [ AdminGuard ],
+        data: { titulo: 'Listado de Configuraciones' }
+    },
+    {
+        path: 'venta',
+        component: VentaComponent,
+        canActivate: [ AdminGuard ],
+        data: { titulo: 'Venta' }
     },
     {
         path: '',

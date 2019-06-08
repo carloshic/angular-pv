@@ -1,21 +1,18 @@
 import { Injectable } from '@angular/core';
-import { IServiceBase } from '../../interfaces/service-base.interface';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { HttpHeaders } from '@angular/common/http';
-import { URL_SERVICIOS } from '../../config/config';
-import { IResponse } from '../../interfaces/response.interface';
-import { Status } from '../../definitions/definitions';
-import { Marca } from '../../models/marca.model';
+import { SharedService } from '../shared/shared.service';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { URL_SERVICIOS } from 'src/app/config/config';
+import { IResponse } from 'src/app/interfaces/response.interface';
+import { Configuracion } from 'src/app/models/configuracion.model';
+import { Status } from 'src/app/definitions/definitions';
 import swal from 'sweetalert2';
 import { Observable } from 'rxjs/Observable';
-import { SharedService } from '../shared/shared.service';
-import {catchError} from 'rxjs/operators/catchError';
-import { map } from 'rxjs/operators';
-import { throwError } from 'rxjs/internal/observable/throwError';
 
-@Injectable()
-export class MarcaService implements IServiceBase  {
+@Injectable({
+  providedIn: 'root'
+})
+export class ConfiguracionService {
 
   constructor(
     private http: HttpClient,
@@ -23,28 +20,28 @@ export class MarcaService implements IServiceBase  {
     private sharedService: SharedService
   ) { }
 
-  consultarTodo(incluirInactivos: boolean) {
+  consultarTodo() {
     const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
-    const url = URL_SERVICIOS + `/marca?inactivos=${incluirInactivos}`;
-    return this.http.get(url, httpOptions ).map((response: IResponse): Marca[] => {
-      let retorno:  Marca[] = [];
+    const url = URL_SERVICIOS + `/configuracion`;
+    return this.http.get(url, httpOptions ).map((response: IResponse): Configuracion[] => {
+      let retorno: Configuracion[] = [];
       this.sharedService.token = response.token;
 
       switch ( response.status ) {
         case Status.OK:
-        retorno = response.data;
-        break;
+          retorno = response.data as Configuracion[];
+          break;
         case Status.ERROR:
           swal.fire(response.message, response.error.message, 'error');
           break;
         case Status.SESSION_EXPIRED:
-          swal.fire('La sesión  ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
+          swal.fire('La sesión  ha expirado', 'por favor vuelva a iniciar sesión', 'info').then(() => {
             this.router.navigate(['/login']);
           });
           break;
         case Status.NOT_RECORDS_FOUND:
-            swal.fire('Ops!!', 'No hay marcas registradas', 'info');
-            break;
+          swal.fire('Ops!!', 'No hay configuraciones registradas', 'info');
+          break;
       }
       return retorno;
     }).catch(err => {
@@ -54,7 +51,7 @@ export class MarcaService implements IServiceBase  {
   }
   consultarPorId(id: number) {
     const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
-    const url = URL_SERVICIOS + '/marca/' + id;
+    const url = URL_SERVICIOS + '/configuracion/' + id;
 
     return this.http.get( url, httpOptions )
                 .map( (response: IResponse) => {
@@ -63,29 +60,65 @@ export class MarcaService implements IServiceBase  {
 
                   switch ( response.status ) {
                     case Status.OK:
-                    return response.data;
+                    return response.data as Configuracion;
                     case Status.ERROR:
                       swal.fire(response.message, response.error.message, 'error');
-                      break;
+                      return null;
                     case Status.SESSION_EXPIRED:
                       swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
                         this.router.navigate(['/login']);
                       });
-                      break;
+                      return null;
                     case Status.NOT_RECORDS_FOUND:
-                      swal.fire('Ops!!', response.error.message, 'info');
-                      break;
+                      swal.fire('Ops!!', response.message, 'info');
+                      return null;
                   }
                 }).catch( (response) => {
                    swal.fire('Ops!!', response.error.message, 'error');
                    return Observable.throwError( response );
                 });
   }
-  registrar(marca: Marca) {
-    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
-    const url = URL_SERVICIOS + '/Marca/';
 
-    return this.http.post(url, marca, httpOptions)
+  consultarPorCodigo(codigo: string) {
+    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
+    const url = URL_SERVICIOS + '/configuracion/codigo/' + codigo;
+
+    return this.http.get( url, httpOptions )
+                .map( (response: IResponse) => {
+                  let retorno: Configuracion = null;
+
+                  this.sharedService.token = response.token;
+
+                  switch ( response.status ) {
+                    case Status.OK:
+                      retorno = response.data as Configuracion;
+                      break;
+                    case Status.ERROR:
+                      swal.fire(response.message, response.error.message, 'error');
+                      retorno = null;
+                      break;
+                    case Status.SESSION_EXPIRED:
+                      swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
+                        this.router.navigate(['/login']);
+                      });
+                      retorno = null;
+                      break;
+                    case Status.NOT_RECORDS_FOUND:
+                      swal.fire('Ops!!', response.message, 'info');
+                      retorno = null;
+                      break;
+                  }
+                  return retorno;
+                }).catch( (response) => {
+                   swal.fire('Ops!!', response.error.message, 'error');
+                   return Observable.throwError( response );
+                });
+  }
+  registrar(configuracion: Configuracion) {
+    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
+    const url = URL_SERVICIOS + '/configuracion/';
+
+    return this.http.post(url, configuracion, httpOptions)
     .map((response: IResponse) => {
 
       this.sharedService.token = response.token;
@@ -95,7 +128,7 @@ export class MarcaService implements IServiceBase  {
           swal.fire({
             type: 'success',
             title: 'Exito',
-            text: `Marca: ${marca.nombre} creada con exito`,
+            text: `configuracion: ${configuracion.codigo} creada con exito`,
             showConfirmButton: false,
             timer: 1500
           });
@@ -117,11 +150,11 @@ export class MarcaService implements IServiceBase  {
       return Observable.throwError( response );
     });
   }
-  actualizar(id: number, marca: Marca) {
+  actualizar(id: number, configuracion: Configuracion) {
     const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
-    const url = URL_SERVICIOS + '/marca/' + id;
+    const url = URL_SERVICIOS + '/configuracion/' + id;
 
-    return this.http.put(url, marca, httpOptions)
+    return this.http.put(url, configuracion, httpOptions)
     .map((response: IResponse) => {
 
       this.sharedService.token = response.token;
@@ -131,7 +164,7 @@ export class MarcaService implements IServiceBase  {
           swal.fire({
             type: 'success',
             title: 'Exito',
-            text: `Marca: ${marca.nombre} actualizada con exito`,
+            text: `Configuracion: ${configuracion.codigo} actualizada con exito`,
             showConfirmButton: false,
             timer: 1500
           });
@@ -153,44 +186,20 @@ export class MarcaService implements IServiceBase  {
       return Observable.throwError( response );
     });
   }
-  borrar(id: number) { }
+  borrar(id: number) {
 
-  buscar(termino: string, incluirInactivos: boolean) {
-    const httpOptions = {
-        headers: new HttpHeaders({
-          Authorization: this.sharedService.token.accessToken
-        })};
-    const url = URL_SERVICIOS + `/busqueda/marca/${termino}/?inactivos=${incluirInactivos}`;
-    return this.http.get( url, httpOptions ).pipe(
-      map(( response: IResponse) => {
-        return response.data;
-      }),
-      catchError(this.handleError)
-    );
-                // .map( (response: IResponse) => {
-                //   return response.data;
-                // } )
-                // .catch( response => {
-                //   swal.fire('Ops!!', response.error.message, 'error');
-                //   return Observable.throwError( response );
-                // });
   }
 
-
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
-    }
-    // return an observable with a user-facing error message
-    return throwError(
-      'Something bad happened; please try again later.');
-  };
-
+  buscar(termino: string) {
+    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
+    const url = URL_SERVICIOS + `/busqueda/configuracion/${termino}`;
+    return this.http.get( url, httpOptions )
+                .map( (response: IResponse) => {
+                  return response.data;
+                } )
+                .catch( response => {
+                  swal.fire('Ops!!', response.error.message, 'error');
+                  return Observable.throwError( response );
+                });
+  }
 }
