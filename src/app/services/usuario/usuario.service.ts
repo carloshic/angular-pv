@@ -201,11 +201,12 @@ export class UsuarioService {
     const url = URL_SERVICIOS + `/usuario?inactivos=${incluirInactivos}`;
 
     return this.http.get( url, httpOptions).map((response: IResponse) => {
-
+      let retorno: Usuario[] = [];
       this.sharedService.token = response.token;
 
       switch ( response.status ) {
           case Status.OK:
+            retorno = response.data as Usuario[];
             break;
           case Status.ERROR:
             swal.fire(response.message, response.error.message, 'error');
@@ -218,7 +219,7 @@ export class UsuarioService {
           case Status.NOT_RECORDS_FOUND:
             break;
         }
-      return response.data;
+      return retorno;
     }).catch(err => {
       swal.fire( 'Ocurrió un error al cargar el listado de usuarios', err.message, 'error' );
       return Observable.throwError( err );

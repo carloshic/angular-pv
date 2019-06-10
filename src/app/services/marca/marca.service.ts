@@ -13,6 +13,7 @@ import { SharedService } from '../shared/shared.service';
 import {catchError} from 'rxjs/operators/catchError';
 import { map } from 'rxjs/operators';
 import { throwError } from 'rxjs/internal/observable/throwError';
+import { Empresa } from '../../models/empresa.model';
 
 @Injectable()
 export class MarcaService implements IServiceBase  {
@@ -56,30 +57,31 @@ export class MarcaService implements IServiceBase  {
     const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
     const url = URL_SERVICIOS + '/marca/' + id;
 
-    return this.http.get( url, httpOptions )
-                .map( (response: IResponse) => {
+    return this.http.get( url, httpOptions ).map( (response: IResponse) => {
+        let retorno: Marca [] = [];
+        this.sharedService.token = response.token;
 
-                  this.sharedService.token = response.token;
-
-                  switch ( response.status ) {
-                    case Status.OK:
-                    return response.data;
-                    case Status.ERROR:
-                      swal.fire(response.message, response.error.message, 'error');
-                      break;
-                    case Status.SESSION_EXPIRED:
-                      swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
-                        this.router.navigate(['/login']);
-                      });
-                      break;
-                    case Status.NOT_RECORDS_FOUND:
-                      swal.fire('Ops!!', response.error.message, 'info');
-                      break;
-                  }
-                }).catch( (response) => {
-                   swal.fire('Ops!!', response.error.message, 'error');
-                   return Observable.throwError( response );
-                });
+        switch ( response.status ) {
+          case Status.OK:
+            retorno = response.data as Marca[];
+            break;
+          case Status.ERROR:
+            swal.fire(response.message, response.error.message, 'error');
+            break;
+          case Status.SESSION_EXPIRED:
+            swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
+              this.router.navigate(['/login']);
+            });
+            break;
+          case Status.NOT_RECORDS_FOUND:
+            swal.fire('Ops!!', response.error.message, 'info');
+            break;
+        }
+        return retorno;
+      }).catch( (response) => {
+          swal.fire('Ops!!', response.error.message, 'error');
+          return Observable.throwError( response );
+      });
   }
   registrar(marca: Marca) {
     const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};

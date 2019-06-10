@@ -53,35 +53,33 @@ export class ProductoService implements IServiceBase {
       const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
       const url = URL_SERVICIOS + '/producto/' + id;
 
-      return this.http.get( url, httpOptions )
-                  .map( (response: IResponse) => {
+      return this.http.get( url, httpOptions ).map( (response: IResponse) => {
+          let retorno: Producto;
 
-                    let retorno: Producto;
+          this.sharedService.token = response.token;
 
-                    this.sharedService.token = response.token;
+          switch ( response.status ) {
+            case Status.OK:
+              retorno = response.data as Producto;
+              break;
+            case Status.ERROR:
+              swal.fire(response.message, response.error.message, 'error');
+              break;
+            case Status.SESSION_EXPIRED:
+              swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
+                this.router.navigate(['/login']);
+              });
+              break;
+            case Status.NOT_RECORDS_FOUND:
+              swal.fire('Ops!!', response.message, 'info');
+              break;
+          }
 
-                    switch ( response.status ) {
-                      case Status.OK:
-                        retorno = response.data as Producto;
-                        break;
-                      case Status.ERROR:
-                        swal.fire(response.message, response.error.message, 'error');
-                        break;
-                      case Status.SESSION_EXPIRED:
-                        swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
-                          this.router.navigate(['/login']);
-                        });
-                        break;
-                      case Status.NOT_RECORDS_FOUND:
-                        swal.fire('Ops!!', response.message, 'info');
-                        break;
-                    }
-
-                    return retorno;
-                  }).catch( (response) => {
-                     swal.fire('Ops!!', response.error.message, 'error');
-                     return Observable.throwError( response );
-                  });
+          return retorno;
+        }).catch( (response) => {
+            swal.fire('Ops!!', response.error.message, 'error');
+            return Observable.throwError( response );
+        });
     }
 
     consultarPorCodigo(codigo: string) {
@@ -89,33 +87,33 @@ export class ProductoService implements IServiceBase {
       const url = URL_SERVICIOS + '/producto/codigo/' + codigo;
 
       return this.http.get( url, httpOptions )
-                  .map( (response: IResponse) => {
-
-                    let retorno: Producto;
-
-                    this.sharedService.token = response.token;
-
-                    switch ( response.status ) {
-                      case Status.OK:
-                        retorno = response.data as Producto;
-                        break;
-                      case Status.ERROR:
-                        swal.fire(response.message, `<span class='text-red'>${response.error.message}</span>`, 'error');
-                        break;
-                      case Status.SESSION_EXPIRED:
-                        swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
-                          this.router.navigate(['/login']);
-                        });
-                        break;
-                      case Status.NOT_RECORDS_FOUND:
-                        swal.fire('Ops!!', `<strong>${response.message}</strong>`, 'info');
-                        break;
-                    }
-                    return retorno;
-                  }).catch( (response) => {
-                     swal.fire('Ops!!', response.error.message, 'error');
-                     return Observable.throwError( response );
+            .map( (response: IResponse) => {
+  
+              let retorno: Producto;
+  
+              this.sharedService.token = response.token;
+  
+              switch ( response.status ) {
+                case Status.OK:
+                  retorno = response.data as Producto;
+                  break;
+                case Status.ERROR:
+                  swal.fire(response.message, `<span class='text-red'>${response.error.message}</span>`, 'error');
+                  break;
+                case Status.SESSION_EXPIRED:
+                  swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
+                    this.router.navigate(['/login']);
                   });
+                  break;
+                case Status.NOT_RECORDS_FOUND:
+                  swal.fire('Ops!!', `<strong>${response.message}</strong>`, 'info');
+                  break;
+              }
+              return retorno;
+            }).catch( (response) => {
+                swal.fire('Ops!!', response.error.message, 'error');
+                return Observable.throwError( response );
+            });
     }
     registrar(producto: Producto) {
       const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
