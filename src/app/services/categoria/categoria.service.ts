@@ -50,9 +50,7 @@ export class CategoriaService implements IServiceBase {
     const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
     const url = URL_SERVICIOS + '/categoria/' + id;
 
-    return this.http.get( url, httpOptions )
-                .map( (response: IResponse) => {
-
+    return this.http.get( url, httpOptions ).map( (response: IResponse) => {
                   let retorno: Categori;
 
                   this.sharedService.token = response.token;

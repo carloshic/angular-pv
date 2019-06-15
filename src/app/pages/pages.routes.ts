@@ -17,6 +17,8 @@ import { CategoriasComponent } from './categorias/categorias.component';
 import { UnidadesComponent } from './unidad/unidades.component';
 import { ConfiguracionesComponent } from './configuraciones/configuraciones.component';
 import { VentaComponent } from './venta/venta.component';
+import { PersonasComponent } from './personas/personas.component';
+import { AbastecimientoComponent } from './abastecimiento/abastecimiento.component';
 
 
 
@@ -90,10 +92,22 @@ const pagesRoutes: Routes = [
         data: { titulo: 'Listado de Configuraciones' }
     },
     {
+        path: 'personas',
+        component: PersonasComponent,
+        canActivate: [ AdminGuard ],
+        data: { titulo: 'Listado de Clientes/Proveedores' }
+    },
+    {
         path: 'venta',
         component: VentaComponent,
         canActivate: [ AdminGuard ],
         data: { titulo: 'Venta' }
+    },
+    {
+        path: 'abastecimiento',
+        component: AbastecimientoComponent,
+        canActivate: [ VerificaTokenGuard ],
+        data: { titulo: 'Abastecimiento' }
     },
     {
         path: '',

@@ -20,7 +20,7 @@ export class Persona {
         this.direccion = '';
         this.telefono = '';
         this.correo = '';
-        this.tipo = '';
+        this.tipo = null;
         this.estatus = true;
         this.usuarioestatus = new Usuario();
         this.fechamodificacion = new Date();

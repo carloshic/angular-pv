@@ -11,6 +11,7 @@ import { Usuario } from '../../models/usuario.model';
 export class SidebarComponent implements OnInit {
 
   usuario: Usuario;
+  public fecha = new Date();
 
   constructor(
     private _sharedService: SharedService,

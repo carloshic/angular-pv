@@ -8,10 +8,9 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-// slim scroll
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+
+
+
 
 // ng2-charts
 import { ChartsModule } from 'ng2-charts';
@@ -35,9 +34,16 @@ import { UnidadesComponent } from './unidad/unidades.component';
 import { ConfiguracionesComponent } from './configuraciones/configuraciones.component';
 import { KeyDownMonedaDirective } from '../directives/key-down-moneda.directive';
 import { EntradaMonedaDirective } from '../directives/entrada-moneda.directive';
-import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { VentaComponent } from './venta/venta.component';
+import { PersonasComponent } from './personas/personas.component';
 
+// slim scroll
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { InventarioComponent } from './inventario/inventario.component';
+import { AbastecimientoComponent } from './abastecimiento/abastecimiento.component';
+import { AbastecerProductoComponent } from './abastecimiento/abastecer-producto/abastecer-producto.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     suppressScrollX: true
 };
@@ -59,13 +65,16 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         ConfiguracionesComponent,
         EntradaMonedaDirective,
         KeyDownMonedaDirective,
-        VentaComponent
+        VentaComponent,
+        PersonasComponent,
+        InventarioComponent,
+        AbastecimientoComponent,
+        AbastecerProductoComponent,
     ],
     exports: [
         TableroComponent,
     ],
     imports: [
-        PerfectScrollbarModule,
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
@@ -74,7 +83,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         FormsModule,
         ChartsModule,
         PipesModule,
-        CurrencyMaskModule
+        PerfectScrollbarModule,
     ],
     providers: [
         {

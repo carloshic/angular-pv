@@ -1,26 +1,29 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { CanActivate } from '@angular/router';
 import { UsuarioService } from '../services/usuario/usuario.service';
 import { Router } from '@angular/router';
 import { SharedService } from '../services/shared/shared.service';
+import swal from 'sweetalert2';
 
 @Injectable()
 export class VerificaTokenGuard implements CanActivate {
 
   constructor(
-    private _sharedService: SharedService,
-    public _usuarioService: UsuarioService,
+    private sharedService: SharedService,
+    public usuarioService: UsuarioService,
     public router: Router
   ) { }
 
   canActivate(): Promise<boolean> | boolean {
 
-    let token = this._sharedService.token;
-    let payload = JSON.parse( atob( token.accessToken.split('.')[1] ));
-    let expirado = this.expirado( payload.exp );
+    const token = this.sharedService.token;
+    const payload = JSON.parse( atob( token.accessToken.split('.')[1] ));
+    const expirado = this.expirado( payload.exp );
 
     if ( expirado ) {
-      this.router.navigate(['/login']);
+      swal.fire('La sesión  ha expidaro', 'por favór vuelva a iniciar sesión', 'info').then(() => {
+        this.router.navigate(['/login']);
+      });
       return false;
     }
 
@@ -32,8 +35,8 @@ export class VerificaTokenGuard implements CanActivate {
 
     return new Promise( (resolve, reject) => {
 
-      let tokenExp = new Date( fechaExp * 1000 );
-      let ahora = new Date();
+      const tokenExp = new Date( fechaExp * 1000 );
+      const ahora = new Date();
 
       // ahora.setTime( ahora.getTime() + ( 1 * 60 * 60 * 1000 ) );
 
@@ -44,14 +47,13 @@ export class VerificaTokenGuard implements CanActivate {
         resolve(true);
       } else {
 
-        this._usuarioService.renuevaToken()
+        this.usuarioService.renuevaToken()
               .subscribe( () => {
                 resolve(true);
               }, () => {
                 this.router.navigate(['/login']);
                 reject(false);
               });
-
       }
 
     });
@@ -61,11 +63,11 @@ export class VerificaTokenGuard implements CanActivate {
 
   expirado( fechaExp: number ) {
 
-    let ahora = new Date().getTime() / 1000;
+    const ahora = new Date().getTime() / 1000;
 
     if ( fechaExp < ahora ) {
       return true;
-    }else {
+    } else {
       return false;
     }
 

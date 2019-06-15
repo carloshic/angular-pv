@@ -15,13 +15,13 @@
                 </div>
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input ngModel name="password" class="form-control" type="password" required placeholder="Contraseña" autocomplete="off">
+                        <input ngModel name="password" #password class="form-control" type="password" required placeholder="Contraseña" autocomplete="off">
                     </div>
                 </div>
                 <div class="form-group">
 
                     <select [(ngModel)]="empresa" name="empresa" class="custom-select col-12" required>
-                             <option *ngFor="let emp of empresas; i as index" [ngValue] = "emp" [selected] ="index == 1"> {{ emp.nombre }}</option> 
+                             <option *ngFor="let emp of empresas" [ngValue] = "emp" > {{ emp.nombre }}</option> 
                     </select>
                 </div>
                 <div class="form-group row">

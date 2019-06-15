@@ -1,27 +1,27 @@
 <div class="from-group row">
     <div class="col-md-8 col-xs-12">
-        <div class="card m-t-5">
+        <div class="card">
             <div class="card-title">
                 <h3></h3>
             </div>
             <div class="card-header">
-                <input type="text" (keypress)="keypress($event)" class="form-control" placeholder="Codigo de Producto">
+                <input type="text" (keypress)="entradaProducto($event)" class="form-control" placeholder="Codigo de Producto">
             </div>
             <div class="card-body">
-                <perfect-scrollbar style="max-height: 700px;">
+                <perfect-scrollbar class="contenedorListadoProductos" #perfectscroll="ngxPerfectScrollbar">
                     <div class="table-responsive">
-                        <table class="table table-hover stylish-table" data-page-size="10">
+                        <table class="table table-hover stylish-table fixed_header" data-page-size="10">
                             <thead>
                                 <tr>
                                     <th>Producto</th>
-                                    <th>Cantidad</th>
+                                    <th class="text-center w-25">Cantidad</th>
                                     <th class="text-right">Precio</th>
-                                    <th class="text-right w-50">Total</th>
-                                    <th class="text-center">Acciones</th>
+                                    <th class="text-right w-25">Total</th>
+                                    <th class="text-center w-25">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let detalleOperacion of operacion.detalleOperacion ; index as i" [ngClass]="{'footable-even': (i % 2 == 0), 'footable-odd': (i % 2 != 0)}" class="highlight-item">
+                                <tr *ngFor="let detalleOperacion of operacion.detalleOperacion ; index as i" [ngClass]="{'footable-even': (i % 2 == 0), 'footable-odd': (i % 2 != 0), 'highlight': detalleOperacion.highlight}">
                                     <td>
                                         <h6>{{ detalleOperacion.producto.nombre }}</h6><small class="text-muted">{{ detalleOperacion.producto.codigo }}</small>
                                     </td>
@@ -29,23 +29,12 @@
                                     <td class="text-right"> {{ detalleOperacion.producto.precio | currency }}</td>
                                     <td class="text-right"> {{ detalleOperacion.total | currency }}</td>
                                     <td class="text-center">
-                                        <button (click)="decrementarCantidad(detalleOperacion)" type="button" class="btn btn-sm btn-circle btn-secondary"><i class="fa fa-minus"></i> </button>
-                                        <button (click)="incrementarCantidad(detalleOperacion)" type="button" class="btn btn-sm btn-circle btn-default"><i class="fa fa-plus"></i> </button>
-                                        <!-- <button *ngIf="detalleOperacion.cantidad === 1" class="btn btn-circle btn-secondary" (click)="borrar(detalleOperacion.producto)">
-                                            <i class="fa fa-remove"></i>
-                                        </button> -->
+                                        <button (click)="moverCantidadProducto(-1, detalleOperacion)" type="button" class="btn btn-outline-secondary btn-circle" title="Decrementar"><i class="fa fa-minus"></i> </button>
+                                        <button (click)="moverCantidadProducto( 1, detalleOperacion)" type="button" class="btn btn-outline-info btn-circle" title="Incrementar"><i class="fa fa-plus"></i> </button>
+                                        <button (click)="borrarProducto( detalleOperacion.producto)" type="button" class="btn btn-outline-danger btn-circle" title="Incrementar"><i class="fa fa-remove"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="7 ">
-                                        <div class="text-right ">
-                                            <ul class="pagination "> </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </perfect-scrollbar>
@@ -55,8 +44,82 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-xs-12 sticky">
-        <div class="form-group row">
+    <div class="col-md-4 col-xs-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>
+                            Cliente
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <dl>
+                                    <div *ngIf="operacion.persona.nombre.length > 0">
+                                        <dt>Nombre:</dt>
+                                        <dd>{{operacion.persona.nombre}}</dd>
+                                    </div>
+                                    <div *ngIf="operacion.persona.nombreempresa.length > 0">
+                                        <dt>Empresa:</dt>
+                                        <dd>{{operacion.persona.nombreempresa}}</dd>
+                                    </div>
+
+                                    <div *ngIf="operacion.persona.direccion.length > 0">
+                                        <dt>Direccion:</dt>
+                                        <dd>{{operacion.persona.direccion}}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <dl>
+                                    <div *ngIf="operacion.persona.telefono.length > 0">
+                                        <dt>Telefono:</dt>
+                                        <dd>{{operacion.persona.telefono}}</dd>
+                                    </div>
+                                    <div *ngIf="operacion.persona.telefono.length > 0">
+                                        <dt>Correo:</dt>
+                                        <dd>{{operacion.persona.correo}}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                        <!-- <div class="row">
+                            <h4 for="ClienteID" class="form-control-label col-md-4 col-lg-4 col-xs-12 text-themecolor text-md-right text-lg-right font-italic">Nombre:</h4>
+                            <div id="ClienteID" class="col-md-8 col-lg-8col-xs-12">
+                                <h4 class="text-themecolor font-italic">{{operacion.persona.nombre}}</h4>
+                            </div>
+                        </div> -->
+                        <!-- <div class="row" *ngIf="operacion.persona.nombreempresa.length > 0">
+                            <h4 for="ClienteID" class="form-control-label col-md-4 col-lg-4 col-xs-12 text-themecolor text-md-right text-lg-right font-italic">Empresa:</h4>
+                            <div id="ClienteID" class="col-md-8 col-lg-8 col-xs-12">
+                                <h4 class="text-themecolor font-italic">{{operacion.persona.nombreempresa}}</h4>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="operacion.persona.direccion.length > 0">
+                            <h4 for="ClienteID" class="form-control-label col-md-4 col-lg-4 col-xs-12 text-themecolor text-md-right text-lg-right font-italic">Direccion:</h4>
+                            <div id="ClienteID" class="col-md-8 col-lg-8 col-xs-12">
+                                <h4 class="text-themecolor font-italic">{{operacion.persona.direccion}}</h4>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="operacion.persona.telefono.length > 0">
+                            <h4 for="ClienteID" class="form-control-label col-md-4 col-lg-4 col-xs-12 text-themecolor text-md-right text-lg-right">Telefono:</h4>
+                            <div id="ClienteID" class="col-md-8 col-lg-8 col-xs-12">
+                                <h4 class="text-themecolor font-italic">{{operacion.persona.telefono}}</h4>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="operacion.persona.correo.length > 0">
+                            <h4 for="ClienteID" class="form-control-label col-md-4 col-lg-4 col-xs-12 text-themecolor text-md-right text-lg-right text-w">Correo:</h4>
+                            <div id="ClienteID" class="col-md-8 col-lg-8 col-xs-12">
+                                <h4 class="text-themecolor font-italic">{{operacion.persona.correo}}</h4>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-12 text-center">
                 <div class="card m-t-5">
                     <div class="card-body">
@@ -65,18 +128,12 @@
                             <div class="stats">
                                 <h1 class="text-left text-themecolor">Total: {{ operacion.total | currency }}</h1>
                                 <!-- <h6 class="text-left text-themecolor">sub</h6> -->
-                                <button class="btn btn-rounded btn-outline btn-secondary btn-block btn-lg m-t-10 font-14">Pagar</button>
                             </div>
                             <div class="stats-icon text-right ml-auto"><i class="fa fa-dollar display-5 op-3 text-themecolor"></i></div>
                         </div>
-                        <!-- <div class="d-flex">
-                            <div class="stats">
-                                <h1 class="text-red">Total: {{ operacion.total | currency }}</h1>
-                                <h6 class="text-red"></h6>
-                                <button class="btn btn-rounded btn-outline btn-secondary btn-block btn-lg m-t-10 font-14">Pagar</button>
-                            </div>
-                            <div class="stats-icon text-right ml-auto"><i class="fa fa-dollar display-5 op-3 text-dark"></i></div>
-                        </div> -->
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-rounded btn-outline btn-secondary btn-block btn-lg m-t-10 font-14">Pagar</button>
                     </div>
                 </div>
             </div>
@@ -86,7 +143,7 @@
 
 
 <footer class="footer-venta label-themecolor">
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-2">
             <button class="btn waves-effect waves-light btn-lg btn-secondary">Accion 1</button>
         </div>
@@ -106,7 +163,7 @@
             <button class="btn waves-effect waves-light btn-lg btn-rounded btn-secondary">Accion 4</button>
         </div>
 
-    </div>
+    </div> -->
 
 
 

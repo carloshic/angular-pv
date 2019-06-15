@@ -86,24 +86,27 @@ export class UsuarioService {
 
   login( usuario: Usuario, empresa: Empresa, recordar: boolean = false ) {
     if ( recordar ) {
-      localStorage.setItem('email', usuario.email );
+      localStorage.setItem('recordar_email', usuario.email );
+      localStorage.setItem('recordar_empresa', JSON.stringify(empresa) );
     } else {
-      localStorage.removeItem('email');
+      localStorage.removeItem('recordar_email');
+      localStorage.removeItem('recordar_empresa');
     }
 
     const url = URL_SERVICIOS + '/auth/login';
     return this.http.post( url, { email: usuario.email, password: usuario.password, empresaId: empresa.id } )
                 .map( (response: IResponse) => {
-
+                  let retorno = false;
                   switch ( response.status ) {
                     case Status.OK:
-                      this.sharedService.incializarSesion(response.data.token, response.data.usuario, response.data.empresa);
+                      this.sharedService.incializarSesion(response.token, response.data.usuario, response.data.empresa);
+                      retorno = true;
                       return response.data;
                     case Status.ERROR:
-                      swal.fire('Ops!!', response.error.message, 'error');
+                      swal.fire(response.message, response.error.message, 'error');
                       break;
                   }
-                  return true;
+                  return retorno;
                 })
                 .catch( resp => {
                   swal.fire( 'Ops!! ' + resp.error.message, resp.error.error.message, 'error' );

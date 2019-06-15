@@ -1,15 +1,14 @@
-import { Component, OnInit, AfterContentChecked, IterableDiffers, DoCheck  } from '@angular/core';
+import { Component, OnInit, IterableDiffers, DoCheck, ViewChild, ElementRef  } from '@angular/core';
 import { SharedService } from '../../services/shared/shared.service';
 import { ProductoService } from '../../services/producto/producto.service';
 import { Producto } from '../../models/producto.model';
 import { Operacion } from '../../models/operacion.model';
 import { TipoOperacion } from '../../models/tipo-operacion.model';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { DetalleOperacion } from '../../models/detalle-operacion.model';
 import { TipoOperacionService } from '../../services/tipo-operacion/tipo-operacion.service';
-import { SubirArchivoService } from '../../services/subir-archivo/subir-archivo.service';
 import { PersonaService } from '../../services/persona/persona.service';
 import { Persona } from '../../models/persona.model';
+import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 
 @Component({
   selector: 'app-venta',
@@ -18,12 +17,12 @@ import { Persona } from '../../models/persona.model';
 })
 export class VentaComponent implements OnInit, DoCheck {
   productos: Producto[] = [];
-  fechaActual = new Date();
   operacion: Operacion;
 
   differ: any;
+
+  @ViewChild(PerfectScrollbarComponent) public scrollListadoProd: PerfectScrollbarComponent;
   constructor(
-    private sharedService: SharedService,
     private productoService: ProductoService,
     private differs: IterableDiffers,
     private tipoOperacionService: TipoOperacionService,
@@ -38,8 +37,10 @@ export class VentaComponent implements OnInit, DoCheck {
       this.operacion.tipooperacion = ventaTO;
     });
 
-    this.personaService.consultarPorId(1).subscribe((persona: Persona) => {
-      this.operacion.persona = persona;
+    this.personaService.buscar('General').subscribe((persona: Persona[]) => {
+      if ( persona.length > 0 ) {
+        this.operacion.persona = persona[0];
+      }
     });
   }
 
@@ -48,34 +49,16 @@ export class VentaComponent implements OnInit, DoCheck {
 
     if ( change ) {
       const detalle: DetalleOperacion [] = change.collection as  DetalleOperacion [];
-      this.actualizarTotal(detalle);
+      this.actualizarTotalVenta(detalle);
     }
   }
 
-  actualizarTotal(detalle: DetalleOperacion []) {
-      let total = 0;
-      for ( const p of detalle ) {
-        total += Number(p.total);
-      }
-      this.operacion.total = total;
+  borrarProducto(producto: Producto) {
+      this.operacion.detalleOperacion = this.operacion.detalleOperacion
+      .filter((detalle: DetalleOperacion) => detalle.producto.id !== producto.id);
   }
 
-  borrar(producto: Producto) {
-      // this.operacion.detalleOperacion = this.operacion.detalleOperacion.filter((det: DetalleOperacion) => {
-      //   if ( det.producto.id === producto.id ) {
-      //       if ( det.cantidad === 1) {
-      //         return false;
-      //       } else {
-      //         det.cantidad--;
-      //         return true;
-      //       }
-      //   }
-      //   return true;
-      // });
-    //}
-  }
-
-  keypress(event) {
+  entradaProducto(event) {
     if ( event.key === 'Enter') {
       this.productoService.consultarPorCodigo(event.target.value).subscribe((producto: Producto) => {
           if ( producto ) {
@@ -85,6 +68,7 @@ export class VentaComponent implements OnInit, DoCheck {
                 detalleOp.cantidad ++;
                 detalleOp.total = Number(detalleOp.producto.precio) * detalleOp.cantidad;
                 prductoAgregado = true;
+                this.despuesProductoAgregado(detalleOp);
               }
             }
             if ( !prductoAgregado ) {
@@ -93,26 +77,52 @@ export class VentaComponent implements OnInit, DoCheck {
               detalleOperacion.cantidad = 1;
               detalleOperacion.operacion = this.operacion;
               detalleOperacion.total = producto.precio * detalleOperacion.cantidad;
-
               this.operacion.detalleOperacion.push(detalleOperacion);
+              this.despuesProductoAgregado(detalleOperacion);
             }
-            this.actualizarTotal(this.operacion.detalleOperacion);
           }
       });
     }
   }
 
-  incrementarCantidad(detalleOperacion: DetalleOperacion) {
-      detalleOperacion.cantidad++;
+  moverCantidadProducto(numero: number,  detalleOperacion: DetalleOperacion) {
+      detalleOperacion.cantidad += numero;
       detalleOperacion.total = detalleOperacion.cantidad * detalleOperacion.producto.precio;
-      this.actualizarTotal(this.operacion.detalleOperacion);
+      this.despuesProductoAgregado(detalleOperacion);
   }
 
-  decrementarCantidad(detalleOperacion: DetalleOperacion) {
-    if ( detalleOperacion.cantidad > 1) {
-      detalleOperacion.cantidad--;
-      detalleOperacion.total = detalleOperacion.cantidad * detalleOperacion.producto.precio;
-      this.actualizarTotal(this.operacion.detalleOperacion);
+  despuesProductoAgregado(detalleOperacion: DetalleOperacion) {
+    this.actualizarTotalVenta(this.operacion.detalleOperacion);
+    this.highlight(detalleOperacion);
+    this.mantenerScrollAbajo();
+  }
+
+  highlight(detalleOperacion: DetalleOperacion) {
+    if ( detalleOperacion.highlight ) {
+      detalleOperacion.highlight = false;
     }
+
+    detalleOperacion.highlight = true;
+    window.setTimeout(() => {
+      detalleOperacion.highlight = false;
+    }, 700);
+  }
+
+  mantenerScrollAbajo() {
+    try {
+        window.setTimeout(() => {
+          this.scrollListadoProd.directiveRef.scrollToBottom(0, 100);
+        }, 50);
+    } catch ( err ) {
+
+    }
+  }
+
+  actualizarTotalVenta(detalle: DetalleOperacion []) {
+      let total = 0;
+      for ( const p of detalle ) {
+        total += Number(p.total);
+      }
+      this.operacion.total = total;
   }
 }

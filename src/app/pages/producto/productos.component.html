@@ -45,7 +45,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let producto of productos ; index as i" [ngClass]="{'footable-even': (i % 2 == 0), 'footable-odd': (i % 2 != 0)}" class="animated fadeIn">
+                            <tr *ngFor="let producto of productos ; index as i" [ngClass]="{'footable-even': (i % 2 == 0), 'footable-odd': (i % 2 != 0)}" class="animated bounceIn">
                                 <td>{{ producto.id }}</td>
                                 <td>
                                     <img (click)="mostrarModal( producto.id )" [src]=" producto.imagen | imagen:'producto'" class="img-50 img-circle pointer ">

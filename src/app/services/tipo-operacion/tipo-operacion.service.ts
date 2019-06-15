@@ -26,6 +26,7 @@ export class TipoOperacionService {
     return this.http.get(url, httpOptions ).map((response: IResponse): TipoOperacion[] => {
 
       let retorno: TipoOperacion [] = [];
+      this.sharedService.token = response.token;
 
       switch ( response.status ) {
         case Status.OK:

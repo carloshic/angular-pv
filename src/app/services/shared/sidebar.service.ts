@@ -13,6 +13,13 @@ export class SidebarService {
       submenu: [
         { titulo: 'Tablero', url: '/tablero' },
         { titulo: 'Ventas', url: '/venta' },
+        { titulo: 'Abstecimiento', url: '/abastecimiento' },
+      ]
+    },
+    {
+      titulo: 'Reportes',
+      icono: 'mdi mdi-trending-up',
+      submenu: [
       ]
     },
     {
@@ -24,9 +31,16 @@ export class SidebarService {
         { titulo: 'Marcas', url: '/marcas' },
         { titulo: 'Categorias', url: '/categorias' },
         { titulo: 'Unidades', url: '/unidades' },
+        { titulo: 'Clientes/Proveedores', url: '/personas' },
+      ]
+    },
+    {
+      titulo: 'Configuración',
+      icono: 'mdi mdi-wrench',
+      submenu: [
         { titulo: 'Configuraciones', url: '/configuraciones' },
       ]
-    }
+    },
   ];
 
   constructor(

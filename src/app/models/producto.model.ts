@@ -22,6 +22,7 @@ export class Producto {
     public fechamodificacion: Date;
     public usuariomodificacion: Usuario;
     constructor( ) {
+        this.id = -1;
         this.codigo = '';
         this.nombre = '';
         this.descripcion = '';

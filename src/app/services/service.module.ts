@@ -8,7 +8,7 @@ import { MarcaService } from './marca/marca.service';
 import { CategoriaService } from './categoria/categoria.service';
 import { ConfiguracionService } from './configuracion/configuracion.service';
 import { TipoOperacionService } from './tipo-operacion/tipo-operacion.service';
-
+import { InventarioService } from './inventario/inventario.service';
 import {
   SettingsService,
   SidebarService,
@@ -43,7 +43,8 @@ import {
     MarcaService,
     CategoriaService,
     ConfiguracionService,
-    TipoOperacionService
+    TipoOperacionService,
+    InventarioService
   ],
   declarations: []
 })

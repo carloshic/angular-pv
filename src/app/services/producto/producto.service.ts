@@ -88,11 +88,11 @@ export class ProductoService implements IServiceBase {
 
       return this.http.get( url, httpOptions )
             .map( (response: IResponse) => {
-  
+
               let retorno: Producto;
-  
+
               this.sharedService.token = response.token;
-  
+
               switch ( response.status ) {
                 case Status.OK:
                   retorno = response.data as Producto;

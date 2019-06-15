@@ -32,9 +32,15 @@
 }
 
 .highlight {
-    animation: highlight 2s;
+    animation: highlight 0.7s;
 }
 
 .stats {
     width: 80% !important;
 }
+
+.contenedorListadoProductos {
+    max-height: 300px;
+}
+
+

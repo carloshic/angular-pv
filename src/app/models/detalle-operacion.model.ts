@@ -10,6 +10,7 @@ export class DetalleOperacion {
     public total: number;
     public fechamodificacion: Date;
     public usuariomodificacion: Usuario;
+    public highlight: boolean;
 
     constructor() {
         this.id = -1;
@@ -19,5 +20,6 @@ export class DetalleOperacion {
         this.total = 0;
         this.fechamodificacion = new Date();
         this.usuariomodificacion  = new Usuario();
+        this.highlight = false;
     }
 }
