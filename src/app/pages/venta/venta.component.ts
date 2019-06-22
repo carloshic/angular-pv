@@ -9,6 +9,10 @@ import { TipoOperacionService } from '../../services/tipo-operacion/tipo-operaci
 import { PersonaService } from '../../services/persona/persona.service';
 import { Persona } from '../../models/persona.model';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
+import { OperacionService } from '../../services/operacion/operacion.service';
+import { InventarioService } from '../../services/inventario/inventario.service';
+import { Inventario } from '../../models/inventario.model';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-venta',
@@ -23,10 +27,12 @@ export class VentaComponent implements OnInit, DoCheck {
 
   @ViewChild(PerfectScrollbarComponent) public scrollListadoProd: PerfectScrollbarComponent;
   constructor(
-    private productoService: ProductoService,
-    private differs: IterableDiffers,
+    // private productoService: ProductoService,
+    private inventarioService: InventarioService,
     private tipoOperacionService: TipoOperacionService,
-    private personaService: PersonaService
+    private personaService: PersonaService,
+    private operacionService: OperacionService,
+    differs: IterableDiffers,
   ) {
     this.operacion = new Operacion();
     this.differ = differs.find([]).create(null);
@@ -37,10 +43,8 @@ export class VentaComponent implements OnInit, DoCheck {
       this.operacion.tipooperacion = ventaTO;
     });
 
-    this.personaService.buscar('General').subscribe((persona: Persona[]) => {
-      if ( persona.length > 0 ) {
-        this.operacion.persona = persona[0];
-      }
+    this.personaService.consultarDefaultParaVenta().subscribe((clienteDefault: Persona) => {
+      this.operacion.persona = clienteDefault;
     });
   }
 
@@ -60,41 +64,77 @@ export class VentaComponent implements OnInit, DoCheck {
 
   entradaProducto(event) {
     if ( event.key === 'Enter') {
-      this.productoService.consultarPorCodigo(event.target.value).subscribe((producto: Producto) => {
-          if ( producto ) {
-            let prductoAgregado = false;
-            for ( const detalleOp of this.operacion.detalleOperacion ) {
-              if ( detalleOp.producto.id === producto.id ) {
-                detalleOp.cantidad ++;
-                detalleOp.total = Number(detalleOp.producto.precio) * detalleOp.cantidad;
-                prductoAgregado = true;
-                this.despuesProductoAgregado(detalleOp);
-              }
-            }
-            if ( !prductoAgregado ) {
-              const detalleOperacion: DetalleOperacion = new DetalleOperacion();
-              detalleOperacion.producto = producto;
-              detalleOperacion.cantidad = 1;
-              detalleOperacion.operacion = this.operacion;
-              detalleOperacion.total = producto.precio * detalleOperacion.cantidad;
-              this.operacion.detalleOperacion.push(detalleOperacion);
-              this.despuesProductoAgregado(detalleOperacion);
-            }
-          }
-      });
+
+      this.agregarProducto(1, event.target.value);
+
+      event.target.value = '';
     }
   }
 
-  moverCantidadProducto(numero: number,  detalleOperacion: DetalleOperacion) {
-      detalleOperacion.cantidad += numero;
-      detalleOperacion.total = detalleOperacion.cantidad * detalleOperacion.producto.precio;
-      this.despuesProductoAgregado(detalleOperacion);
+  agregarProducto(cantidad: number, codigo: string) {
+
+    if ( codigo.trim() ) {
+
+      this.inventarioService.consultarPorCodigoProducto(codigo).subscribe((inventario: Inventario) => {
+        if ( inventario ) {
+
+          const detalleOp = this.operacion.detalleOperacion.find(x => x.producto.id === inventario.producto.id );
+
+          if ( detalleOp ) {
+
+            let cantidadTmp = (detalleOp.cantidad + cantidad);
+
+            if ( cantidadTmp <= inventario.stock ) {
+
+              if ( cantidadTmp <= 1 ) {
+
+                cantidadTmp = 1;
+              }
+              detalleOp.cantidad = cantidadTmp;
+
+              detalleOp.total = Number(detalleOp.producto.precio) * detalleOp.cantidad;
+
+              this.despuesProductoAgregado(detalleOp);
+
+            } else if ( cantidadTmp > inventario.stock ) {
+              // El producto ya fue vendido desde otro pv Igualar la cantidad al stock
+              detalleOp.cantidad = inventario.stock;
+
+              swal.fire(
+                'Producto Agotado',
+                `No hay suficiente <strong class="text-danger">${ inventario.producto.nombre } </strong>
+                <br> Stock disponible: <br><span class="text-info fa-2x"> ${ inventario.stock } </span>
+                `, 'warning');
+            }
+          } else {
+
+            const detalleOperacion: DetalleOperacion = new DetalleOperacion();
+
+            detalleOperacion.producto = inventario.producto;
+
+            detalleOperacion.cantidad = 1;
+
+            detalleOperacion.total = inventario.producto.precio * detalleOperacion.cantidad;
+
+            this.operacion.detalleOperacion.push(detalleOperacion);
+
+            this.despuesProductoAgregado(detalleOperacion);
+          }
+        }
+    });
+  }
   }
 
-  despuesProductoAgregado(detalleOperacion: DetalleOperacion) {
+  moverCantidadProducto(numero: number,  detalleOperacion: DetalleOperacion) {
+      this.agregarProducto(numero, detalleOperacion.producto.codigo);
+  }
+
+  despuesProductoAgregado(detalleOperacion: DetalleOperacion, mantenerSroll: boolean = false) {
     this.actualizarTotalVenta(this.operacion.detalleOperacion);
     this.highlight(detalleOperacion);
-    this.mantenerScrollAbajo();
+    if ( !mantenerSroll ) {
+      this.mantenerScrollAbajo();
+    }
   }
 
   highlight(detalleOperacion: DetalleOperacion) {
@@ -124,5 +164,51 @@ export class VentaComponent implements OnInit, DoCheck {
         total += Number(p.total);
       }
       this.operacion.total = total;
+  }
+
+  guardar() {
+    const operacionDto = {
+      personaId : this.operacion.persona.id,
+      total: this.operacion.total,
+      tipooperacionId: this.operacion.tipooperacion.id,
+      detalleOperacion : []
+    };
+
+    this.operacion.detalleOperacion.forEach(detalle => {
+      operacionDto.detalleOperacion.push( {
+        productoId : detalle.producto.id,
+        cantidad: detalle.cantidad,
+        total: detalle.total
+      });
+    });
+
+    this.operacionService.registrar(operacionDto).subscribe((operacion: any) => {
+      if ( operacion ) {
+        swal.fire({
+          type: 'success',
+          title: 'Exito',
+          text: `Venta # ${operacion.id} registrada con exito`,
+          showConfirmButton: false,
+          timer: 1500,
+          onClose: () => {
+            swal.fire({
+              title: 'Impresion',
+              text: '¿Desea realizar la impresión?',
+              type: 'info',
+              showCloseButton: true,
+              showCancelButton: true,
+              focusConfirm: false,
+              confirmButtonText: '<i class="fa fa-print"></i> Imprimir Recibo',
+              confirmButtonAriaLabel: 'Thumbs up, great!',
+              cancelButtonAriaLabel: 'Thumbs down',
+            }).then((result) => {
+              if (result.value) {
+                this.operacion.detalleOperacion = [];
+              }
+            });
+          }
+        });
+      }
+    });
   }
 }

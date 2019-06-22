@@ -1,11 +1,13 @@
-<div class="from-group row">
+<div class="from-group row contenedor-venta">
     <div class="col-md-8 col-xs-12">
-        <div class="card">
-            <div class="card-title">
-                <h3></h3>
+        <div class="card card-venta">
+            <div class="card-header">
+                <h3>
+                    Productos
+                </h3>
             </div>
             <div class="card-header">
-                <input type="text" (keypress)="entradaProducto($event)" class="form-control" placeholder="Codigo de Producto">
+                <input type="text" (keypress)="entradaProducto($event)" class="form-control" placeholder="Buscar por codigo">
             </div>
             <div class="card-body">
                 <perfect-scrollbar class="contenedorListadoProductos" #perfectscroll="ngxPerfectScrollbar">
@@ -14,10 +16,10 @@
                             <thead>
                                 <tr>
                                     <th>Producto</th>
-                                    <th class="text-center w-25">Cantidad</th>
+                                    <th class="text-lg-right">Cantidad</th>
                                     <th class="text-right">Precio</th>
-                                    <th class="text-right w-25">Total</th>
-                                    <th class="text-center w-25">Acciones</th>
+                                    <th class="text-right">Total</th>
+                                    <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -25,7 +27,7 @@
                                     <td>
                                         <h6>{{ detalleOperacion.producto.nombre }}</h6><small class="text-muted">{{ detalleOperacion.producto.codigo }}</small>
                                     </td>
-                                    <td> {{ detalleOperacion.cantidad }} </td>
+                                    <td class="text-right"> {{ detalleOperacion.cantidad }} </td>
                                     <td class="text-right"> {{ detalleOperacion.producto.precio | currency }}</td>
                                     <td class="text-right"> {{ detalleOperacion.total | currency }}</td>
                                     <td class="text-center">
@@ -133,7 +135,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-rounded btn-outline btn-secondary btn-block btn-lg m-t-10 font-14">Pagar</button>
+                        <button (click)="guardar()" class="btn btn-rounded btn-outline btn-secondary btn-block btn-lg m-t-10 font-14">Pagar</button>
                     </div>
                 </div>
             </div>

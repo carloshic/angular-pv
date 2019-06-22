@@ -40,7 +40,9 @@
 }
 
 .contenedorListadoProductos {
-    max-height: 300px;
+    max-height: 600px;
 }
 
-
+.card-venta {
+    min-height: 300px
+}

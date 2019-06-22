@@ -7,22 +7,26 @@ import { Usuario } from '../../models/usuario.model';
 @Component({
   selector: 'app-tablero',
   templateUrl: './tablero.component.html',
-  styles: []
+  styles: [`
+    .pp-grafico-dona {
+      min-height: 400px;
+    }
+  `]
 })
 export class TableroComponent implements OnInit {
 
   graficos  = {
-    'tipo_autenticacion': {
-      'labels': ['Google', 'Normal'],
-      'data':  [0,0],
+    tipo_autenticacion: {
+      labels: ['Google', 'Normal'],
+      data:  [0,0],
       // 'type': 'doughnut',
-      'leyenda': 'Tipos de Autenticación'
+      leyenda: 'Tipos de Autenticación'
     },
-    'tipo_usuario': {
-      'labels': ['Administrador', 'Usuario'],
-      'data':  [0, 0],
+    tipo_usuario: {
+      labels: ['Administrador', 'Usuario'],
+      data:  [0, 0],
       // 'type': 'doughnut',
-      'leyenda': 'Tipos de Usuario'
+      leyenda: 'Tipos de Usuario'
     }
   };
 

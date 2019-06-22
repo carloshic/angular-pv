@@ -13,13 +13,13 @@ export class SidebarService {
       submenu: [
         { titulo: 'Tablero', url: '/tablero' },
         { titulo: 'Ventas', url: '/venta' },
-        { titulo: 'Abstecimiento', url: '/abastecimiento' },
       ]
     },
     {
       titulo: 'Reportes',
       icono: 'mdi mdi-trending-up',
       submenu: [
+        { titulo: 'Inventario', url: '/inventario' },
       ]
     },
     {

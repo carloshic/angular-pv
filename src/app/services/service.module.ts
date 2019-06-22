@@ -9,6 +9,7 @@ import { CategoriaService } from './categoria/categoria.service';
 import { ConfiguracionService } from './configuracion/configuracion.service';
 import { TipoOperacionService } from './tipo-operacion/tipo-operacion.service';
 import { InventarioService } from './inventario/inventario.service';
+import { OperacionService } from './operacion/operacion.service';
 import {
   SettingsService,
   SidebarService,
@@ -44,7 +45,8 @@ import {
     CategoriaService,
     ConfiguracionService,
     TipoOperacionService,
-    InventarioService
+    InventarioService,
+    OperacionService
   ],
   declarations: []
 })

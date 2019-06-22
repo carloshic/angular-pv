@@ -4,7 +4,7 @@ import { Operacion } from './operacion.model';
 
 export class DetalleOperacion {
     public id: number;
-    public operacion: Operacion;
+    //public operacion: Operacion;
     public producto: Producto;
     public cantidad: number;
     public total: number;
@@ -14,7 +14,7 @@ export class DetalleOperacion {
 
     constructor() {
         this.id = -1;
-        this.operacion = new Operacion();
+        //this.operacion = new Operacion();
         this.producto = new Producto();
         this.cantidad = 0;
         this.total = 0;

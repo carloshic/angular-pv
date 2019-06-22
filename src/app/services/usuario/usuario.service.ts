@@ -271,9 +271,8 @@ export class UsuarioService {
                 });
   }
   existeEmail(email) {
-    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
-    const url = URL_SERVICIOS + '/validador/usuario/existe_email/' + email;
+    const url = URL_SERVICIOS + '/usuario/existe_email/' + email;
 
-    return this.http.get(url, httpOptions);
+    return this.http.get(url);
   }
 }

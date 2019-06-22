@@ -48,6 +48,40 @@ export class InventarioService {
       return Observable.throwError( err );
     });
   }
+
+  consultarPorCodigoProducto(codigo: string) {
+    const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
+    const url = URL_SERVICIOS + '/inventario/producto/' + codigo;
+
+    return this.http.get( url, httpOptions )
+                .map( (response: IResponse) => {
+
+                  let retorno: Inventario;
+
+                  this.sharedService.token = response.token;
+
+                  switch ( response.status ) {
+                    case Status.OK:
+                      retorno = response.data as Inventario;
+                      break;
+                    case Status.ERROR:
+                      swal.fire(response.message, response.error.message, 'error');
+                      break;
+                    case Status.SESSION_EXPIRED:
+                      swal.fire('La sesión ha expidaro', 'por favor vuelva a iniciar sesión', 'info').then(() => {
+                        this.router.navigate(['/login']);
+                      });
+                      break;
+                    case Status.NOT_RECORDS_FOUND:
+                      swal.fire('Ops!!', response.message, 'info');
+                  }
+                  return retorno;
+                }).catch( (response) => {
+                   swal.fire('Ops!!', response.error.message, 'error');
+                   return Observable.throwError( response );
+                });
+  }
+
   consultarPorId(id: number) {
     const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
     const url = URL_SERVICIOS + '/inventario/' + id;

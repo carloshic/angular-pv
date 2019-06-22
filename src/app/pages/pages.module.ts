@@ -42,8 +42,6 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { InventarioComponent } from './inventario/inventario.component';
-import { AbastecimientoComponent } from './abastecimiento/abastecimiento.component';
-import { AbastecerProductoComponent } from './abastecimiento/abastecer-producto/abastecer-producto.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     suppressScrollX: true
 };
@@ -68,8 +66,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         VentaComponent,
         PersonasComponent,
         InventarioComponent,
-        AbastecimientoComponent,
-        AbastecerProductoComponent,
     ],
     exports: [
         TableroComponent,
