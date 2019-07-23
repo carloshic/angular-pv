@@ -1,4 +1,4 @@
-<div *ngIf="inventarioAbastecer.producto.id === -1" class=" row ">
+<div *ngIf="inventarioAbastecer.producto.id === -1" class="row form-group">
     <div class="col-lg-6 col-xlg-6 col-md-6 text-right ">
         <div class="card mb-0 ">
             <div class="card-body ">
@@ -7,7 +7,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="inventarioAbastecer.producto.id> -1" class="row">
+<div *ngIf="inventarioAbastecer.producto.id> -1" class="row form-group">
     <div class="col-2">
         <button (click)="regresar()" class="btn waves-effect waves-light btn-rounded btn-outline-secondary btn-md">
               <i class="fa fa-arrow-circle-left"></i> Regresar
@@ -16,7 +16,7 @@
     </div>
 
 </div>
-<div *ngIf="inventarioAbastecer.producto.id === -1" class="row animated fadeIn">
+<div *ngIf="inventarioAbastecer.producto.id === -1" class="row form-group animated fadeIn">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
@@ -64,7 +64,7 @@
     </div>
 </div>
 
-<div *ngIf="inventarioAbastecer.producto.id > -1" class="row animated fadeIn">
+<div *ngIf="inventarioAbastecer.producto.id > -1" class="row form-group animated fadeIn">
     <div class="col-12">
         <div class="form-horizontal form-material" autocomplete="off">
             <div class="form-group row">

@@ -76,9 +76,9 @@ export class InventarioService {
                       swal.fire('Ops!!', response.message, 'info');
                   }
                   return retorno;
-                }).catch( (response) => {
-                   swal.fire('Ops!!', response.error.message, 'error');
-                   return Observable.throwError( response );
+                }).catch(response => {
+                  swal.fire('Ops!!', response.error.error.message, 'error');
+                  return Observable.throwError( response );
                 });
   }
 
@@ -107,9 +107,9 @@ export class InventarioService {
                       swal.fire('Ops!!', response.message, 'info');
                   }
                   return retorno;
-                }).catch( (response) => {
-                   swal.fire('Ops!!', response.error.message, 'error');
-                   return Observable.throwError( response );
+                }).catch(response => {
+                  swal.fire('Ops!!', response.error.error.message, 'error');
+                  return Observable.throwError( response );
                 });
   }
 
@@ -147,8 +147,8 @@ export class InventarioService {
         break;
       }
     })
-    .catch((response) => {
-      swal.fire('Ops!!', response.error.message, 'error');
+    .catch(response => {
+      swal.fire('Ops!!', response.error.error.message, 'error');
       return Observable.throwError( response );
     });
   }
@@ -163,8 +163,8 @@ export class InventarioService {
                 .map( (response: IResponse) => {
                   return response.data;
                 } )
-                .catch( response => {
-                  swal.fire('Ops!!', response.error.message, 'error');
+                .catch(response => {
+                  swal.fire('Ops!!', response.error.error.message, 'error');
                   return Observable.throwError( response );
                 });
   }

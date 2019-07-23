@@ -78,8 +78,8 @@ export class MarcaService implements IServiceBase  {
             break;
         }
         return retorno;
-      }).catch( (response) => {
-          swal.fire('Ops!!', response.error.message, 'error');
+      }).catch(response => {
+          swal.fire('Ops!!', response.error.error.message, 'error');
           return Observable.throwError( response );
       });
   }
@@ -114,8 +114,8 @@ export class MarcaService implements IServiceBase  {
         break;
       }
     })
-    .catch((response) => {
-      swal.fire('Ops!!', response.error.message, 'error');
+    .catch(response => {
+      swal.fire('Ops!!', response.error.error.message, 'error');
       return Observable.throwError( response );
     });
   }
@@ -150,8 +150,8 @@ export class MarcaService implements IServiceBase  {
         break;
       }
     })
-    .catch((response) => {
-      swal.fire('Ops!!', response.error.message, 'error');
+    .catch(response => {
+      swal.fire('Ops!!', response.error.error.message, 'error');
       return Observable.throwError( response );
     });
   }
@@ -189,6 +189,8 @@ export class MarcaService implements IServiceBase  {
       console.error(
         `Backend returned code ${error.status}, ` +
         `body was: ${error.error}`);
+
+        swal.fire('Ops!!', error.error.error.message, 'error');
     }
     // return an observable with a user-facing error message
     return throwError(

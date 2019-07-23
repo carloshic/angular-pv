@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import swal from 'sweetalert2';
+import { SubirArchivoService } from '../../services/subir-archivo/subir-archivo.service';
 
 @Injectable()
 export class ModalUploadService {
@@ -12,7 +13,9 @@ export class ModalUploadService {
 
   public notificacion = new EventEmitter<any>();
 
-  constructor() { }
+  constructor(
+    private subirArchivservice: SubirArchivoService,
+  ) { }
 
   ocultarModal() {
     this.oculto = 'oculto';
@@ -21,7 +24,10 @@ export class ModalUploadService {
   }
 
   mostrarModal( tipo: string, id: number ) {
-    if ( tipo && id) {
+
+    this.subirArchivservice.progreso = 0;
+
+    if ( tipo && id && id > 0) {
       this.oculto = '';
       this.id = id;
       this.tipo = tipo;
@@ -34,7 +40,6 @@ export class ModalUploadService {
         timer: 2000
       });
     }
-    
   }
 
 }

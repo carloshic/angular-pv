@@ -23,8 +23,6 @@ export class UsuarioService {
 
   menu: any[] = [];
 
-
-
   constructor(
     public http: HttpClient,
     public router: Router,

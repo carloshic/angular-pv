@@ -1,4 +1,4 @@
-import { Component, OnInit, IterableDiffers, DoCheck, ViewChild, ElementRef  } from '@angular/core';
+import { Component, OnInit, IterableDiffers, DoCheck, ViewChild, ElementRef, ɵConsole  } from '@angular/core';
 import { SharedService } from '../../services/shared/shared.service';
 import { ProductoService } from '../../services/producto/producto.service';
 import { Producto } from '../../models/producto.model';
@@ -20,14 +20,16 @@ import swal from 'sweetalert2';
   styleUrls: ['./venta.component.css']
 })
 export class VentaComponent implements OnInit, DoCheck {
+  clientes: Persona [] = [];
+  clienteDefault: Persona;
   productos: Producto[] = [];
   operacion: Operacion;
-
   differ: any;
+  pantallaCompleta = false;
 
   @ViewChild(PerfectScrollbarComponent) public scrollListadoProd: PerfectScrollbarComponent;
+
   constructor(
-    // private productoService: ProductoService,
     private inventarioService: InventarioService,
     private tipoOperacionService: TipoOperacionService,
     private personaService: PersonaService,
@@ -43,8 +45,10 @@ export class VentaComponent implements OnInit, DoCheck {
       this.operacion.tipooperacion = ventaTO;
     });
 
+    this.cargarPersonas();
     this.personaService.consultarDefaultParaVenta().subscribe((clienteDefault: Persona) => {
       this.operacion.persona = clienteDefault;
+      this.clienteDefault = clienteDefault;
     });
   }
 
@@ -96,29 +100,39 @@ export class VentaComponent implements OnInit, DoCheck {
 
               this.despuesProductoAgregado(detalleOp);
 
-            } else if ( cantidadTmp > inventario.stock ) {
+            } else if ( cantidadTmp > inventario.stock) {
               // El producto ya fue vendido desde otro pv Igualar la cantidad al stock
-              detalleOp.cantidad = inventario.stock;
+              if ( inventario.stock > 0 ) {
+                detalleOp.cantidad = inventario.stock;
 
+                swal.fire(
+                  'Producto Agotado',
+                  `No hay suficiente <strong class="text-danger">${ inventario.producto.nombre } </strong>
+                  <br> Stock disponible: <br><span class="text-info fa-2x"> ${ inventario.stock } </span>
+                  `, 'warning');
+              }
+            }
+          } else {
+
+            if ( inventario.stock > 0 ) {
+              const detalleOperacion: DetalleOperacion = new DetalleOperacion();
+
+              detalleOperacion.producto = inventario.producto;
+
+              detalleOperacion.cantidad = 1;
+
+              detalleOperacion.total = inventario.producto.precio * detalleOperacion.cantidad;
+
+              this.operacion.detalleOperacion.push(detalleOperacion);
+
+              this.despuesProductoAgregado(detalleOperacion);
+            } else {
               swal.fire(
                 'Producto Agotado',
                 `No hay suficiente <strong class="text-danger">${ inventario.producto.nombre } </strong>
                 <br> Stock disponible: <br><span class="text-info fa-2x"> ${ inventario.stock } </span>
                 `, 'warning');
             }
-          } else {
-
-            const detalleOperacion: DetalleOperacion = new DetalleOperacion();
-
-            detalleOperacion.producto = inventario.producto;
-
-            detalleOperacion.cantidad = 1;
-
-            detalleOperacion.total = inventario.producto.precio * detalleOperacion.cantidad;
-
-            this.operacion.detalleOperacion.push(detalleOperacion);
-
-            this.despuesProductoAgregado(detalleOperacion);
           }
         }
     });
@@ -199,16 +213,37 @@ export class VentaComponent implements OnInit, DoCheck {
               showCancelButton: true,
               focusConfirm: false,
               confirmButtonText: '<i class="fa fa-print"></i> Imprimir Recibo',
-              confirmButtonAriaLabel: 'Thumbs up, great!',
-              cancelButtonAriaLabel: 'Thumbs down',
             }).then((result) => {
-              if (result.value) {
-                this.operacion.detalleOperacion = [];
-              }
+              this.operacion.detalleOperacion = [];
+              this.operacion.persona = this.clienteDefault;
+              // if (result.value) {
+              // }
             });
           }
         });
       }
     });
+  }
+  cargarPersonas() {
+    this.personaService.consultarTodo().subscribe((personas: Persona[]) => {
+      this.clientes = personas.filter(x => x.tipo.toUpperCase() === 'CLIENTE' && !x.esPersonaVentaPublico);
+    });
+  }
+  buscarPersona(term: string) {
+    if ( term.length > 0 ) {
+      this.personaService.buscar(term).subscribe((personas: Persona []) => {
+        this.clientes = personas.filter(x => x.tipo.toUpperCase() === 'CLIENTE' && !x.esPersonaVentaPublico);
+      });
+    } else {
+      this.cargarPersonas();
+    }
+  }
+
+  seleccionarPersona(persona: Persona) {
+    this.operacion.persona = persona;
+  }
+
+  establecerClienteDefault() {
+    this.operacion.persona = this.clienteDefault;
   }
 }

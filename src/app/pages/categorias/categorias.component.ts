@@ -8,17 +8,17 @@ import { CategoriaService } from '../../services/categoria/categoria.service';
   styles: []
 })
 export class CategoriasComponent{
-  private timeOutBusqueda: number = -1;
+  private timeOutBusqueda = -1;
 
   categorias: Categori [] = [];
   categoria: Categori = new Categori();
-  esNuevo: boolean = false;
-  incluirInactivos: boolean = false;
+  esNuevo = false;
+  incluirInactivos = false;
 
   constructor(
-    private _categoriaService: CategoriaService
+    private _categoriaService: CategoriaService,
   ) {
-      this.cargarCategorias()  ;
+      this.cargarCategorias();
   }
 
   cargarCategorias() {

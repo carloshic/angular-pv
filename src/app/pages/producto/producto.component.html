@@ -4,7 +4,8 @@
             <div class="col-lg-4 col-xlg-3 col-md-5">
                 <div class="card">
                     <div class="card-body">
-                        <div class="m-t-30 text-center subir-imagen"> <img (click)="mostrarModal( producto.id )" [src]="producto.imagen | imagen:'producto'" class="img-circle" width="250" />
+                        <div class="m-t-30 text-center">
+                            <img (click)="mostrarModal( producto.id )" [src]="producto.imagen | imagen:'producto'" class="img-circle" width="250" />
                             <h4 class="card-title m-t-10">{{producto.nombre}}</h4>
                             <h6 class="card-subtitle">{{producto.codigo}}</h6>
                             <div class="row text-center justify-content-md-center">
@@ -28,11 +29,10 @@
                         <div class="form-group row">
                             <div class="col-md-6 col-lg-6">
                                 <div class="form-group">
-                                    <label class="col-12">Codigo</label>
+                                    <label class="col-12">Codigo <span *ngIf="form.controls['codigo'].errors?.codigo_existente" class="form-control-feedback text-danger p-l-20 animated fadeIn"><small>El codigo ya existe</small></span></label>
                                     <div class="col-12">
                                         <input formControlName="codigo" [attr.disabled]="!esNuevo ? '': null" name="codigo" #codigo class="form-control form-control-line">
                                     </div>
-                                    <div *ngIf="form.controls['codigo'].errors?.codigo_existente" class="form-control-feedback text-danger p-l-20 animated fadeIn"><small>El codigo ya existe</small></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="nombre" class="col-12">Nombre</label>
@@ -49,13 +49,13 @@
                                 <div class="form-group">
                                     <label for="costo" class="col-12">Costo</label>
                                     <div class="col-12">
-                                        <input type="text" (keyup)="entrada($event)" class="form-control form-control-line" formControlName="costo" name="costo" id="costo">
+                                        <input appEntradaMoneda type="number" (keyup)="entrada($event)" class="form-control form-control-line" formControlName="costo" name="costo" id="costo">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="precio" class="col-12">Precio de Venta</label>
                                     <div class="col-12">
-                                        <input type="text" class="form-control form-control-line" formControlName="precio" name="precio" id="precio">
+                                        <input appEntradaMoneda type="number" class="form-control form-control-line" formControlName="precio" name="precio" id="precio">
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                     <label for="stockminimo" class="col-12">Stock Minimo</label>
                                     <div class="col-12">
-                                        <input type="text" class="form-control form-control-line" formControlName="stockminimo" name="stockminimo" id="stockminimo">
+                                        <input type="number" class="form-control form-control-line" formControlName="stockminimo" name="stockminimo" id="stockminimo" min="0">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -104,7 +104,7 @@
                     <div class="card-footer">
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <button class="btn btn-info btn-rounded btn-md" type="submit"><span *ngIf="!esNuevo">Acutalizar</span><span *ngIf="esNuevo">Guardar</span></button>
+                                <button [attr.disabled]="!form.valid ? '': null" class="btn btn-info btn-rounded btn-md" type="submit"><span *ngIf="!esNuevo">Acutalizar</span><span *ngIf="esNuevo">Guardar</span></button>
                                 <!-- [attr.disabled]="!form.valid ? '': null" -->
                             </div>
                         </div>

@@ -86,11 +86,11 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">×</button>
                                                     <h4 class="modal-title" id="myModalLabel">
                                                         <span *ngIf="esNuevo">Nueva Persona</span>
                                                         <span *ngIf="!esNuevo">Editar Persona</span>
                                                     </h4>
+                                                    <button type="button" class="close" data-dismiss="modal">×</button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-horizontal form-material">
@@ -119,6 +119,11 @@
                                                             <div class="col-md-12 m-b-20">
                                                                 <input id="estatus" [(ngModel)]="persona.estatus" name="estatus" type="checkbox" class="chk-col-light-green" checked="">
                                                                 <label for="estatus">  Estatus</label>
+                                                            </div>
+
+                                                            <div *ngIf="persona.tipo === 'Cliente'" class="col-md-12 m-b-20 animated fadeIn">
+                                                                <input id="esPersonaVentaPublico" [(ngModel)]="persona.esPersonaVentaPublico" name="esPersonaVentaPublico" type="checkbox" class="chk-col-light-green">
+                                                                <label for="esPersonaVentaPublico"> Default para Ventas</label>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -54,23 +54,35 @@ export class ModalUploadComponent implements OnInit {
 
   subirImagen() {
 
-    this.subirArchivoService.subirArchivo( this.imagenSubir, this.modalUploadService.tipo, this.modalUploadService.id )
-          .then( (response: IResponse) => {
+    // this.subirArchivoService.subirArchivo( this.imagenSubir, this.modalUploadService.tipo, this.modalUploadService.id )
+    //       .then( (response: IResponse) => {
 
-            this.modalUploadService.notificacion.emit( response );
-            swal.fire({
-              type: 'success',
-              title: 'Imagen Actualizada',
-              text: response.data.email,
-              showConfirmButton: false,
-              timer: 1500
-            });
+    //         this.modalUploadService.notificacion.emit( response );
+    //         swal.fire({
+    //           type: 'success',
+    //           title: 'Exito',
+    //           text: 'Imagen actualizada con exito',
+    //           showConfirmButton: false,
+    //           timer: 1500
+    //         });
+
+    //         this.cerrarModal();
+
+    //       })
+    //       .catch( err => {
+    //         swal.fire( 'Ops!!', 'Ocurio un error al subir la imagen', 'error' );
+    //       });
+
+    this.subirArchivoService.subirArchivo2( this.imagenSubir, this.modalUploadService.tipo, this.modalUploadService.id )
+          .subscribe( (response: IResponse) => {
+
+            if ( response ) {
+              this.modalUploadService.notificacion.emit( response );
+            }
+
 
             this.cerrarModal();
 
-          })
-          .catch( err => {
-            swal.fire( 'Ops!!', 'Ocurio un error al subir la imagen', 'error' );
           });
 
   }

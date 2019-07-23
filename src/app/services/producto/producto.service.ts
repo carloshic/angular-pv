@@ -11,21 +11,28 @@ import { Status } from '../../definitions/definitions';
 import { Router } from '@angular/router';
 import { SharedService } from '../shared/shared.service';
 import { IServiceBase } from '../../interfaces/service-base.interface';
+import { BlockUIService } from '../block-ui/block-ui.service';
 
 @Injectable()
 export class ProductoService implements IServiceBase {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private blockUIService: BlockUIService
     ) { }
 
     consultarTodo(incluirInactivos: boolean = false) {
       const httpOptions = { headers: new HttpHeaders({ Authorization: this.sharedService.token.accessToken })};
       const url = URL_SERVICIOS + `/producto?inactivos=${incluirInactivos}`;
+
+      this.blockUIService.bloquearUI();
       return this.http.get(url, httpOptions ).map((response: IResponse): Producto[] => {
 
+        this.blockUIService.desbloquearUI();
+
         this.sharedService.token = response.token;
+
         let retorno: Producto[] = [];
         switch ( response.status ) {
           case Status.OK:
@@ -45,6 +52,7 @@ export class ProductoService implements IServiceBase {
         }
         return retorno;
       }).catch(err => {
+        this.blockUIService.desbloquearUI();
         swal.fire( 'Ops!!', err.message, 'error' );
         return Observable.throwError( err );
       });
@@ -76,9 +84,9 @@ export class ProductoService implements IServiceBase {
           }
 
           return retorno;
-        }).catch( (response) => {
-            swal.fire('Ops!!', response.error.message, 'error');
-            return Observable.throwError( response );
+        }).catch((response) => {
+          swal.fire('Ops!!', response.error.error.message, 'error');
+          return Observable.throwError( response );
         });
     }
 
@@ -110,8 +118,8 @@ export class ProductoService implements IServiceBase {
                   break;
               }
               return retorno;
-            }).catch( (response) => {
-                swal.fire('Ops!!', response.error.message, 'error');
+            }).catch((response) => {
+                swal.fire('Ops!!', response.error.error.message, 'error');
                 return Observable.throwError( response );
             });
     }
@@ -148,7 +156,7 @@ export class ProductoService implements IServiceBase {
         }
       })
       .catch((response) => {
-        swal.fire('Ops!!', response.error.message, 'error');
+        swal.fire('Ops!!', response.error.error.message, 'error');
         return Observable.throwError( response );
       });
     }
@@ -184,7 +192,7 @@ export class ProductoService implements IServiceBase {
         }
       })
       .catch((response) => {
-        swal.fire('Ops!!', response.error.message, 'error');
+        swal.fire('Ops!!', response.error.error.message, 'error');
         return Observable.throwError( response );
       });
     }
@@ -199,9 +207,9 @@ export class ProductoService implements IServiceBase {
                   .map( (resp: any) => {
                     return resp.data;
                   } )
-                  .catch( err => {
-                    swal.fire( 'Ocurrió un error al realizar la busqueda', err.message, 'error' );
-                    return Observable.throwError( err );
+                  .catch((response) => {
+                    swal.fire('Ops!!', response.error.error.message, 'error');
+                    return Observable.throwError( response );
                   });
     }
     existeCodigo(codigo: string) {

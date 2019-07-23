@@ -155,7 +155,7 @@ export class PersonaService {
       }
     })
     .catch((response) => {
-      swal.fire('Ops!!', response.error.message, 'error');
+      swal.fire('Ops!!', response.error.error.message, 'error');
       return Observable.throwError( response );
     });
   }
@@ -192,7 +192,7 @@ export class PersonaService {
       }
     })
     .catch((response) => {
-      swal.fire('Ops!!', response.error.message, 'error');
+      swal.fire('Ops!!', response.error.error.message, 'error');
       return Observable.throwError( response );
     });
   }

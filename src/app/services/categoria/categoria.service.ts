@@ -41,9 +41,9 @@ export class CategoriaService implements IServiceBase {
           break;
       }
       return retorno;
-    }).catch(err => {
-      swal.fire( 'Ops!!', err.message, 'error' );
-      return Observable.throwError( err );
+    }).catch(response => {
+      swal.fire('Ops!!', response.error.error.message, 'error');
+      return Observable.throwError( response );
     });
   }
   consultarPorId(id: number) {
@@ -74,7 +74,7 @@ export class CategoriaService implements IServiceBase {
 
                   return retorno;
                 }).catch( (response) => {
-                   swal.fire('Ops!!', response.error.message, 'error');
+                   swal.fire('Ops!!', response.error.error.message, 'error');
                    return Observable.throwError( response );
                 });
   }
@@ -110,7 +110,7 @@ export class CategoriaService implements IServiceBase {
       }
     })
     .catch((response) => {
-      swal.fire('Ops!!', response.error.message, 'error');
+      swal.fire('Ops!!', response.error.error.message, 'error');
       return Observable.throwError( response );
     });
   }
@@ -146,7 +146,7 @@ export class CategoriaService implements IServiceBase {
       }
     })
     .catch((response) => {
-      swal.fire('Ops!!', response.error.message, 'error');
+      swal.fire('Ops!!', response.error.error.message, 'error');
       return Observable.throwError( response );
     });
   }
@@ -162,7 +162,7 @@ export class CategoriaService implements IServiceBase {
                   return response.data;
                 } )
                 .catch( response => {
-                  swal.fire('Ops!!', response.error.message, 'error');
+                  swal.fire('Ops!!', response.error.error.message, 'error');
                   return Observable.throwError( response );
                 });
   }

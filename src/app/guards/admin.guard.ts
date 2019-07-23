@@ -16,7 +16,7 @@ export class AdminGuard implements CanActivate {
 
     if ( this._sharedService.usuarioActivo.role === 'ADMIN_ROLE' ) {
       return true;
-    }else {
+    } else {
       swal.fire(
         'Ops!!',
         'Para ingresar a esta opcion se requieren contar con rol de administrador',

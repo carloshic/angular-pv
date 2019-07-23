@@ -118,10 +118,10 @@ export class ProductoComponent implements OnInit {
       codigo:       new FormControl('', Validators.required),
       nombre:       new FormControl('', Validators.required),
       descripcion:  new FormControl('', Validators.required),
-      costo:        new FormControl('', [Validators.required, Validators.pattern(regExpDecimales)]),
-      precio:       new FormControl('', [Validators.required, Validators.pattern(regExpDecimales)]),
+      costo:        new FormControl('', [Validators.required, Validators.pattern(regExpDecimales), Validators.min(1)]),
+      precio:       new FormControl('', [Validators.required, Validators.pattern(regExpDecimales), Validators.min(1)]),
       unidad:       new FormControl(null, Validators.required),
-      stockminimo:  new FormControl('', Validators.required),
+      stockminimo:  new FormControl('', [Validators.required, Validators.min(0)]),
       marca:        new FormControl(null, Validators.required),
       categoria:    new FormControl(null, Validators.required),
       estatus:      new FormControl(true)
@@ -131,7 +131,9 @@ export class ProductoComponent implements OnInit {
   }
 
   mostrarModal(id: number) {
-    this.modalUploadService.mostrarModal('producto', id);
+    if ( id > -1 ) {
+      this.modalUploadService.mostrarModal('producto', id);
+    }
   }
   existeCodigo(control: FormControl): Promise<any> | Observable<any> {
     return this.productoService.existeCodigo(control.value);

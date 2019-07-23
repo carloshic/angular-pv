@@ -30,10 +30,10 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-md-6 col-xs-12">
                         <h3 class="card-title">Total de Usuarios ( <small>{{ totalRegistros }}</small> )</h3>
                     </div>
-                    <div class="col-6 text-right p-r-40">
+                    <div class="col-md-6 col-xs-12 text-md-right text-lg-right p-r-40">
                         <input id="incluirInactivos" (click)="cargarUsuarios()" [(ngModel)]="incluirInactivos" name="incluirInactivos" type="checkbox" class="chk-col-light-green" checked="">
                         <label for="incluirInactivos">Ver Inactivos</label>
                     </div>

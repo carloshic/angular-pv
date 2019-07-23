@@ -9,8 +9,6 @@ export class EntradaMonedaDirective {
   @HostListener('keypress', ['$event'])
   onkeydown( event ) {
     const PUNTO = '.';
-    const tecla = event.key;
-    const valorActual = event.target.value as string;
 
     if ( isNaN(event.key) && event.key !== PUNTO ) {
 
@@ -26,12 +24,15 @@ export class EntradaMonedaDirective {
 
       } else {
 
-        if ( event.target.value.split(PUNTO)[1].length === 2 &&
-              event.target.selectionStart < event.target.value.indexOf(PUNTO)) {
+        if ( event.target.value.split(PUNTO)[1].length === 2 ) {
 
           this.detener(event);
 
+        } else if ( event.target.selectionStart && event.target.selectionStart < event.target.value.indexOf(PUNTO) ) {
+          this.detener(event);
         }
+        console.log(event.target.selectionStart);
+        console.log(event.target.selectionEnd);
       }
     }
   }

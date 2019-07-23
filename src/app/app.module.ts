@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-
 // Rutas
 import { APP_ROUTES } from './app.routes';
 
@@ -15,7 +14,9 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './login/register.component';
 import { PagesComponent } from './pages/pages.component';
 import { SharedModule } from './shared/shared.module';
-import { VentaComponent } from './pages/venta/venta.component';
+import { BlockUIModule  } from 'ng-block-ui';
+import { BlockUiTemplateComponent } from './components/block-ui-template/block-ui-template.component';
+
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { VentaComponent } from './pages/venta/venta.component';
     LoginComponent,
     RegisterComponent,
     PagesComponent,
-    //VentaComponent,
+    BlockUiTemplateComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,9 +32,14 @@ import { VentaComponent } from './pages/venta/venta.component';
     FormsModule,
     ReactiveFormsModule,
     ServiceModule,
-    SharedModule
+    SharedModule,
+    BlockUIModule.forRoot({
+      delayStart: 500,
+      delayStop: 500
+    })
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -12,6 +12,7 @@ export class Persona {
     public usuarioestatus: Usuario;
     public fechamodificacion: Date;
     public usuariomodificacion: Usuario;
+    public esPersonaVentaPublico: boolean;
 
     constructor() {
         this.id = -1;
@@ -25,5 +26,6 @@ export class Persona {
         this.usuarioestatus = new Usuario();
         this.fechamodificacion = new Date();
         this.usuariomodificacion = new Usuario();
+        this.esPersonaVentaPublico = false;
     }
 }

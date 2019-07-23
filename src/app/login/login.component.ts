@@ -6,7 +6,8 @@ import { Usuario } from '../models/usuario.model';
 import { GOOGLE_CLIENT_ID } from '../config/config';
 import { EmpresaService } from '../services/empresa/empresa.service';
 import { Empresa } from '../models/empresa.model';
-import { EmptyError } from 'rxjs';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Observable } from 'rxjs/Observable';
 
 declare function init_plugins();
 declare const gapi: any;

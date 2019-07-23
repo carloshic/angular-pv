@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Persona } from '../../models/persona.model';
 import { PersonaService } from '../../services/persona/persona.service';
 import { NgForm } from '@angular/forms';
+import { ModalUploadService } from 'src/app/components/modal-upload/modal-upload.service';
 
 @Component({
   selector: 'app-personas',
@@ -22,7 +23,7 @@ export class PersonasComponent implements OnInit {
 
   @ViewChild('cerrarModal') cerrarModal: ElementRef;
   constructor(
-    private personaService: PersonaService
+    private personaService: PersonaService,
   ) {
     this.personas = [];
     this.persona = new Persona();

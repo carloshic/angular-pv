@@ -31,7 +31,7 @@ export class EmpresaService {
       if ( response.status === 0) {
         swal.fire('Ops!!', 'No fue posible conectar con el servidor de la aplicación [backend]', 'error');
       } else {
-        swal.fire('Ops!!', response.error.message, 'error');
+        swal.fire('Ops!!', response.error.error.message, 'error');
       }
       return Observable.throwError( response );
     });

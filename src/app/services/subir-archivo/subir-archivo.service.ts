@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { URL_SERVICIOS } from '../../config/config';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { map } from 'rxjs/operator/map';
 import { Observable } from 'rxjs/Observable';
+import swal from 'sweetalert2';
+import { IResponse } from '../../interfaces/response.interface';
 
 @Injectable()
 export class SubirArchivoService {
-
+  public progreso = 0;
   constructor(
     private http: HttpClient
   ) { }
@@ -44,36 +45,38 @@ export class SubirArchivoService {
   }
 
   subirArchivo2(file: File, type: string, id: number) {
-
-    return new Promise( (resolve, reject ) => {
       const url = URL_SERVICIOS + '/upload/' + type + '/' + id;
-  
+
       const formData = new FormData();
-  
+
       formData.append( 'file', file, file.name );
-  
-      this.http.post<any>(url, formData, {
+
+      return this.http.put(url, formData, {
         reportProgress: true,
         observe: 'events'
       }).map((event) => {
-        switch (event.type) {
-  
-          case HttpEventType.UploadProgress:
-            const progress = Math.round(100 * event.loaded / event.total);
-            console.log(progress);
-            //return { status: 'progress', message: progress };
-            break;
-          case HttpEventType.Response:
-            resolve(event.body);
-            break;
-          default:
-            reject(`Unhandled event: ${event.type}`);
-            break;
+
+        let retorno: IResponse;
+
+        if ( event.type === HttpEventType.UploadProgress) {
+
+          this.progreso = Math.round(100 * event.loaded / event.total);
+
+        } else if ( event.type === HttpEventType.Response ) {
+
+          retorno = event.body as IResponse;
         }
-      }).catch((error) => {
-          console.log(error);
-          return Observable.throwError( error );
+
+        return retorno;
+      }).catch((response) => {
+          swal.fire({
+            type: 'error',
+            title: 'Ops!!',
+            text: response.error.error.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          return Observable.throwError( response );
       });
-    });
   }
 }
